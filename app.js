@@ -96,12 +96,15 @@ function flameFor(p, game) {
 }
 
 // score de performance d'un joueur dans une game (0-10)
+// chaque composante est normalisée sur une valeur "excellente" atteignable :
+// KDA 5 = parfait, 70% de kill participation = parfait, 28% des dégâts
+// de l'équipe = parfait (on est 5 à se les partager).
 function perfScore(p, game) {
   const teamKills = game.teamKills || game.players.reduce((s, x) => s + x.kills, 0) || 1;
   const teamDamage = game.teamDamage || game.players.reduce((s, x) => s + x.damage, 0) || 1;
-  const kp = (p.kills + p.assists) / teamKills;       // kill participation
-  const ds = p.damage / teamDamage;                    // damage share
-  const k = Math.min(kda(p) / 6, 1);                   // kda normalisé
+  const kp = Math.min(((p.kills + p.assists) / teamKills) / 0.7, 1); // kill participation
+  const ds = Math.min((p.damage / teamDamage) / 0.28, 1);            // damage share
+  const k = Math.min(kda(p) / 5, 1);                                  // kda
   return Math.round((k * 4 + kp * 3 + ds * 3) * 10) / 10; // note sur 10
 }
 
@@ -479,6 +482,57 @@ function renderRoast() {
   const worstAvg = by((s) => s.avgScore, -1);
   const csGod = by((s) => s.cs / s.games);
 
+  // ---- stats débiles supplémentaires ----
+  const MIN_G = 5;
+  const regulars = ACTIVE.filter((s) => s.games >= MIN_G);
+  const pool = regulars.length ? regulars : ACTIVE;
+  const byPool = (fn, dir = 1) => [...pool].sort((a, b) => dir * (fn(b) - fn(a)))[0];
+
+  const lucky = byPool((s) => s.winrate);
+  const cursed = byPool((s) => s.winrate, -1);
+  const brawler = byPool((s) => (s.kills + s.assists) / s.games);
+  const vulture = byPool((s) => (s.kills / Math.max(s.damage, 1)) * 1000);
+  const oneTrick = byPool((s) => (s.mainChamp ? s.mainChamp[1] / s.games : 0));
+  const tourist = byPool((s) => Object.keys(s.champs).length);
+
+  // temps de jeu cumulé (durée "mm:ss")
+  const minutesOf = (d) => { const [m, s] = d.split(":").map(Number); return m + (s || 0) / 60; };
+  const playtime = {};
+  STATE.games.forEach((g) => g.players.forEach((p) => { playtime[p.name] = (playtime[p.name] || 0) + minutesOf(g.duration); }));
+  const noLife = Object.entries(playtime).sort((a, b) => b[1] - a[1])[0];
+
+  // régularité : écart-type des notes par joueur
+  const scoresByPlayer = {};
+  STATE.games.forEach((g) => g.players.forEach((p) => { (scoresByPlayer[p.name] = scoresByPlayer[p.name] || []).push(perfScore(p, g)); }));
+  const stddev = (arr) => { const m = arr.reduce((a, b) => a + b, 0) / arr.length; return Math.sqrt(arr.reduce((a, b) => a + (b - m) ** 2, 0) / arr.length); };
+  const volat = Object.entries(scoresByPlayer).filter(([, v]) => v.length >= MIN_G).map(([n, v]) => [n, stddev(v)]).sort((a, b) => b[1] - a[1]);
+  const rollercoaster = volat[0];
+  const steady = volat[volat.length - 1];
+
+  // duos : paires de joueurs dans la même équipe
+  const pairs = {};
+  STATE.games.forEach((g) => {
+    const names = g.players.map((p) => p.name).sort();
+    for (let i = 0; i < names.length; i++) for (let j = i + 1; j < names.length; j++) {
+      const k = `${names[i]} + ${names[j]}`;
+      pairs[k] = pairs[k] || { games: 0, wins: 0 };
+      pairs[k].games++;
+      if (g.victory) pairs[k].wins++;
+    }
+  });
+  const pairList = Object.entries(pairs).filter(([, v]) => v.games >= MIN_G);
+  const bff = [...pairList].sort((a, b) => b[1].games - a[1].games)[0];
+  const doomedDuo = [...pairList].sort((a, b) => (a[1].wins / a[1].games) - (b[1].wins / b[1].games))[0];
+
+  // la soirée noire : la date avec le plus de défaites
+  const byDate = {};
+  STATE.games.forEach((g) => {
+    byDate[g.date] = byDate[g.date] || { games: 0, losses: 0 };
+    byDate[g.date].games++;
+    if (!g.victory) byDate[g.date].losses++;
+  });
+  const darkNight = Object.entries(byDate).sort((a, b) => b[1].losses - a[1].losses)[0];
+
   const cards = [
     { cls: "gold",  emoji: "🏆", title: "La performance du siècle", who: bestPerf.name,
       detail: `${bestPerf.kills}/${bestPerf.deaths}/${bestPerf.assists} sur ${bestPerf.champion}. Encadrez ce screenshot, ça n'arrivera plus jamais.` },
@@ -500,6 +554,38 @@ function renderRoast() {
       detail: `Note moyenne de ${bestAvg.avgScore.toFixed(1)}/10. Statistiquement le plus utile. Statistiquement.` },
     { cls: "shame", emoji: "📉", title: "Le pire en moyenne", who: worstAvg.name,
       detail: `Note moyenne de ${worstAvg.avgScore.toFixed(1)}/10. Mais bon, l'important c'est de participer.` },
+    { cls: "gold",  emoji: "🍀", title: "Le porte-bonheur", who: lucky.name,
+      detail: `${lucky.winrate}% de winrate quand il est là. Corrélation n'est pas causalité, mais invitez-le quand même.` },
+    { cls: "shame", emoji: "🦠", title: "Le porte-poisse", who: cursed.name,
+      detail: `${cursed.winrate}% de winrate quand il est là. Coïncidence ? L'équipe a son avis sur la question.` },
+    { cls: "gold",  emoji: "🥊", title: "Le bagarreur", who: brawler.name,
+      detail: `${((brawler.kills + brawler.assists) / brawler.games).toFixed(1)} kills + assists par game. Impliqué dans tout, même dans ce qui ne le regarde pas.` },
+    { cls: "shame", emoji: "🦅", title: "Le vautour", who: vulture.name,
+      detail: `${((vulture.kills / Math.max(vulture.damage, 1)) * 1000).toFixed(2)} kill(s) pour 1000 dégâts. Il ne fait pas le travail, il signe juste le reçu.` },
+    { cls: "gold",  emoji: "🎰", title: "Le one-trick", who: oneTrick.name,
+      detail: `${oneTrick.mainChamp[0]} dans ${Math.round((oneTrick.mainChamp[1] / oneTrick.games) * 100)}% de ses games. Le champion pool d'un poisson rouge, mais assumé.` },
+    { cls: "gold",  emoji: "🌪️", title: "Le touriste", who: tourist.name,
+      detail: `${Object.keys(tourist.champs).length} champions différents. Maîtrise : aucune. Curiosité : infinie.` },
+    { cls: "shame", emoji: "🛋️", title: "Le sans-vie", who: noLife[0],
+      detail: `${Math.round(noLife[1] / 60)}h${String(Math.round(noLife[1] % 60)).padStart(2, "0")} passées en flex avec nous. Et il dit qu'il a "pas le temps" pour le reste.` },
+    ...(rollercoaster ? [
+      { cls: "shame", emoji: "🎢", title: "Les montagnes russes", who: rollercoaster[0],
+        detail: `Écart-type de ${rollercoaster[1].toFixed(1)} sur ses notes. Capable du meilleur comme du pire, souvent dans la même soirée.` },
+      { cls: "gold",  emoji: "🧊", title: "Monsieur régulier", who: steady[0],
+        detail: `Écart-type de ${steady[1].toFixed(1)} seulement. D'une constance remarquable. À ce niveau-là, c'est presque de l'entêtement.` },
+    ] : []),
+    ...(bff ? [
+      { cls: "gold",  emoji: "🤝", title: "Le duo fusionnel", who: bff[0],
+        detail: `${bff[1].games} games ensemble (${Math.round((bff[1].wins / bff[1].games) * 100)}% de wins). À ce stade, c'est plus du duo, c'est du PACS.` },
+    ] : []),
+    ...(doomedDuo ? [
+      { cls: "shame", emoji: "💔", title: "Le duo maudit", who: doomedDuo[0],
+        detail: `${Math.round((doomedDuo[1].wins / doomedDuo[1].games) * 100)}% de winrate en ${doomedDuo[1].games} games ensemble. Séparez-les, c'est pour leur bien.` },
+    ] : []),
+    ...(darkNight && darkNight[1].losses >= 2 ? [
+      { cls: "shame", emoji: "☠️", title: "La soirée noire", who: new Date(darkNight[0]).toLocaleDateString("fr-FR", { day: "numeric", month: "long" }),
+        detail: `${darkNight[1].losses} défaites en ${darkNight[1].games} games ce soir-là. Quelqu'un avait dit "dernière et on dort". Il avait menti deux fois.` },
+    ] : []),
   ];
 
   el.innerHTML = `
