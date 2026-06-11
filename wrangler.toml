@@ -1,0 +1,10 @@
+# Config Cloudflare du serveur de commentaires.
+# Déploiement : npx wrangler deploy
+name = "flex-comments"
+main = "worker.js"
+compatibility_date = "2026-06-01"
+workers_dev = true
+
+[[kv_namespaces]]
+binding = "COMMENTS"
+id = "9d759b7fd82646448280bb92bf782b4e"

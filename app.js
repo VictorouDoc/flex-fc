@@ -5,7 +5,7 @@
 // ---------- config ----------
 // URL du worker Cloudflare pour les commentaires (voir README).
 // Tant que c'est vide, la zone commentaires affiche un message d'attente.
-const COMMENTS_API = "";
+const COMMENTS_API = "https://flex-comments.champagne-victor28000-6a2.workers.dev";
 
 // ---------- état (rechargeable via le bouton ⟳) ----------
 let STATE = { players: PLAYERS, games: GAMES, gamesOrder: "asc" };
