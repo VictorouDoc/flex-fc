@@ -39,6 +39,7 @@ const PLAYERS = [
   { name: "Kanye West",     tag: "#JLOVE" },
   { name: "LaDid",          tag: "#LaDid" },
   { name: "Wiraak",         tag: "#EUW"   },
+  { name: "Phaeldque",      tag: "#EUW"   },
 ];
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));

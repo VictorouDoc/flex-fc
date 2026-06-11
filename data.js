@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 11/06/2026 19:42:29
-//  66 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 11/06/2026 20:18:30
+//  74 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -68,6 +68,10 @@ const PLAYERS = [
   },
   {
     "name": "Wiraak",
+    "tag": "#EUW"
+  },
+  {
+    "name": "Phaeldque",
     "tag": "#EUW"
   }
 ];
@@ -850,6 +854,201 @@ const GAMES = [
         "cs": 46,
         "damage": 11503,
         "vision": 88
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7721083404",
+    "date": "2026-02-07",
+    "victory": true,
+    "duration": "36:06",
+    "teamKills": 43,
+    "teamDamage": 174309,
+    "players": [
+      {
+        "name": "Cedex",
+        "role": "TOP",
+        "champion": "Kayle",
+        "kills": 7,
+        "deaths": 8,
+        "assists": 13,
+        "cs": 279,
+        "damage": 33530,
+        "vision": 29
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "JGL",
+        "champion": "Zaahen",
+        "kills": 14,
+        "deaths": 7,
+        "assists": 9,
+        "cs": 266,
+        "damage": 48643,
+        "vision": 33
+      },
+      {
+        "name": "Kanye West",
+        "role": "MID",
+        "champion": "Malzahar",
+        "kills": 5,
+        "deaths": 10,
+        "assists": 12,
+        "cs": 259,
+        "damage": 25744,
+        "vision": 25
+      },
+      {
+        "name": "Miso",
+        "role": "ADC",
+        "champion": "Lucian",
+        "kills": 9,
+        "deaths": 8,
+        "assists": 8,
+        "cs": 269,
+        "damage": 39086,
+        "vision": 28
+      },
+      {
+        "name": "Phaeldque",
+        "role": "SUP",
+        "champion": "Pantheon",
+        "kills": 8,
+        "deaths": 9,
+        "assists": 10,
+        "cs": 30,
+        "damage": 27306,
+        "vision": 137
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7721022077",
+    "date": "2026-02-07",
+    "victory": true,
+    "duration": "30:08",
+    "teamKills": 39,
+    "teamDamage": 140144,
+    "players": [
+      {
+        "name": "Miso",
+        "role": "TOP",
+        "champion": "Yasuo",
+        "kills": 10,
+        "deaths": 7,
+        "assists": 10,
+        "cs": 216,
+        "damage": 34086,
+        "vision": 31
+      },
+      {
+        "name": "Kanye West",
+        "role": "JGL",
+        "champion": "LeeSin",
+        "kills": 5,
+        "deaths": 8,
+        "assists": 19,
+        "cs": 181,
+        "damage": 21073,
+        "vision": 37
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "MID",
+        "champion": "Viktor",
+        "kills": 3,
+        "deaths": 4,
+        "assists": 11,
+        "cs": 235,
+        "damage": 27457,
+        "vision": 16
+      },
+      {
+        "name": "Cedex",
+        "role": "ADC",
+        "champion": "Jhin",
+        "kills": 12,
+        "deaths": 4,
+        "assists": 6,
+        "cs": 196,
+        "damage": 17794,
+        "vision": 15
+      },
+      {
+        "name": "Phaeldque",
+        "role": "SUP",
+        "champion": "Xerath",
+        "kills": 9,
+        "deaths": 1,
+        "assists": 16,
+        "cs": 43,
+        "damage": 39734,
+        "vision": 94
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7720988668",
+    "date": "2026-02-07",
+    "victory": true,
+    "duration": "17:18",
+    "teamKills": 24,
+    "teamDamage": 58466,
+    "players": [
+      {
+        "name": "Miso",
+        "role": "TOP",
+        "champion": "Yone",
+        "kills": 8,
+        "deaths": 2,
+        "assists": 3,
+        "cs": 146,
+        "damage": 27272,
+        "vision": 11
+      },
+      {
+        "name": "Phaeldque",
+        "role": "JGL",
+        "champion": "Shyvana",
+        "kills": 5,
+        "deaths": 1,
+        "assists": 3,
+        "cs": 128,
+        "damage": 7547,
+        "vision": 11
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "MID",
+        "champion": "TwistedFate",
+        "kills": 2,
+        "deaths": 2,
+        "assists": 5,
+        "cs": 154,
+        "damage": 6993,
+        "vision": 9
+      },
+      {
+        "name": "Cedex",
+        "role": "ADC",
+        "champion": "Tristana",
+        "kills": 3,
+        "deaths": 4,
+        "assists": 6,
+        "cs": 111,
+        "damage": 8751,
+        "vision": 10
+      },
+      {
+        "name": "Kanye West",
+        "role": "SUP",
+        "champion": "Pyke",
+        "kills": 6,
+        "deaths": 3,
+        "assists": 8,
+        "cs": 14,
+        "damage": 7903,
+        "vision": 47
       }
     ]
   },
@@ -3454,6 +3653,201 @@ const GAMES = [
     ]
   },
   {
+    "id": "EUW1_7880101479",
+    "date": "2026-06-07",
+    "victory": true,
+    "duration": "44:29",
+    "teamKills": 43,
+    "teamDamage": 210061,
+    "players": [
+      {
+        "name": "Cedex",
+        "role": "TOP",
+        "champion": "Olaf",
+        "kills": 9,
+        "deaths": 7,
+        "assists": 5,
+        "cs": 333,
+        "damage": 50760,
+        "vision": 42
+      },
+      {
+        "name": "Wiraak",
+        "role": "JGL",
+        "champion": "Sejuani",
+        "kills": 4,
+        "deaths": 8,
+        "assists": 18,
+        "cs": 227,
+        "damage": 21265,
+        "vision": 37
+      },
+      {
+        "name": "Kanye West",
+        "role": "MID",
+        "champion": "Zed",
+        "kills": 13,
+        "deaths": 8,
+        "assists": 10,
+        "cs": 292,
+        "damage": 38904,
+        "vision": 38
+      },
+      {
+        "name": "Phaeldque",
+        "role": "ADC",
+        "champion": "Ezreal",
+        "kills": 14,
+        "deaths": 2,
+        "assists": 11,
+        "cs": 393,
+        "damage": 82315,
+        "vision": 44
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "SUP",
+        "champion": "Karma",
+        "kills": 3,
+        "deaths": 5,
+        "assists": 22,
+        "cs": 60,
+        "damage": 16817,
+        "vision": 127
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7880044692",
+    "date": "2026-06-07",
+    "victory": true,
+    "duration": "38:06",
+    "teamKills": 48,
+    "teamDamage": 187117,
+    "players": [
+      {
+        "name": "Jordan Carter",
+        "role": "TOP",
+        "champion": "XinZhao",
+        "kills": 7,
+        "deaths": 6,
+        "assists": 8,
+        "cs": 312,
+        "damage": 44789,
+        "vision": 54
+      },
+      {
+        "name": "Phaeldque",
+        "role": "JGL",
+        "champion": "Ekko",
+        "kills": 11,
+        "deaths": 6,
+        "assists": 16,
+        "cs": 252,
+        "damage": 43416,
+        "vision": 46
+      },
+      {
+        "name": "Wiraak",
+        "role": "MID",
+        "champion": "Sion",
+        "kills": 6,
+        "deaths": 3,
+        "assists": 16,
+        "cs": 277,
+        "damage": 39945,
+        "vision": 26
+      },
+      {
+        "name": "Cedex",
+        "role": "ADC",
+        "champion": "Tristana",
+        "kills": 18,
+        "deaths": 7,
+        "assists": 9,
+        "cs": 265,
+        "damage": 42932,
+        "vision": 26
+      },
+      {
+        "name": "Kanye West",
+        "role": "SUP",
+        "champion": "Pyke",
+        "kills": 6,
+        "deaths": 12,
+        "assists": 12,
+        "cs": 29,
+        "damage": 16035,
+        "vision": 113
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7879975175",
+    "date": "2026-06-07",
+    "victory": false,
+    "duration": "39:12",
+    "teamKills": 36,
+    "teamDamage": 155209,
+    "players": [
+      {
+        "name": "Kanye West",
+        "role": "TOP",
+        "champion": "Teemo",
+        "kills": 9,
+        "deaths": 10,
+        "assists": 6,
+        "cs": 277,
+        "damage": 47578,
+        "vision": 40
+      },
+      {
+        "name": "Phaeldque",
+        "role": "JGL",
+        "champion": "JarvanIV",
+        "kills": 4,
+        "deaths": 5,
+        "assists": 16,
+        "cs": 274,
+        "damage": 22611,
+        "vision": 46
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "MID",
+        "champion": "TwistedFate",
+        "kills": 5,
+        "deaths": 9,
+        "assists": 5,
+        "cs": 259,
+        "damage": 21334,
+        "vision": 40
+      },
+      {
+        "name": "Cedex",
+        "role": "ADC",
+        "champion": "Tristana",
+        "kills": 17,
+        "deaths": 7,
+        "assists": 4,
+        "cs": 326,
+        "damage": 49671,
+        "vision": 16
+      },
+      {
+        "name": "Wiraak",
+        "role": "SUP",
+        "champion": "Blitzcrank",
+        "kills": 1,
+        "deaths": 10,
+        "assists": 21,
+        "cs": 28,
+        "damage": 14015,
+        "vision": 77
+      }
+    ]
+  },
+  {
     "id": "EUW1_7881104921",
     "date": "2026-06-08",
     "victory": true,
@@ -4360,6 +4754,136 @@ const GAMES = [
         "cs": 19,
         "damage": 10609,
         "vision": 31
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7883938201",
+    "date": "2026-06-11",
+    "victory": false,
+    "duration": "30:32",
+    "teamKills": 26,
+    "teamDamage": 100964,
+    "players": [
+      {
+        "name": "Wiraak",
+        "role": "TOP",
+        "champion": "Shen",
+        "kills": 4,
+        "deaths": 4,
+        "assists": 6,
+        "cs": 184,
+        "damage": 10339,
+        "vision": 18
+      },
+      {
+        "name": "Phaeldque",
+        "role": "JGL",
+        "champion": "Khazix",
+        "kills": 7,
+        "deaths": 6,
+        "assists": 7,
+        "cs": 188,
+        "damage": 22268,
+        "vision": 31
+      },
+      {
+        "name": "Kanye West",
+        "role": "MID",
+        "champion": "Xerath",
+        "kills": 7,
+        "deaths": 7,
+        "assists": 8,
+        "cs": 241,
+        "damage": 28942,
+        "vision": 18
+      },
+      {
+        "name": "Cedex",
+        "role": "ADC",
+        "champion": "Corki",
+        "kills": 5,
+        "deaths": 7,
+        "assists": 10,
+        "cs": 230,
+        "damage": 28485,
+        "vision": 17
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "SUP",
+        "champion": "Nami",
+        "kills": 3,
+        "deaths": 7,
+        "assists": 15,
+        "cs": 22,
+        "damage": 10930,
+        "vision": 49
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7883883307",
+    "date": "2026-06-11",
+    "victory": true,
+    "duration": "35:16",
+    "teamKills": 50,
+    "teamDamage": 193135,
+    "players": [
+      {
+        "name": "Jordan Carter",
+        "role": "TOP",
+        "champion": "Sett",
+        "kills": 15,
+        "deaths": 10,
+        "assists": 6,
+        "cs": 228,
+        "damage": 52813,
+        "vision": 28
+      },
+      {
+        "name": "Kanye West",
+        "role": "JGL",
+        "champion": "RekSai",
+        "kills": 8,
+        "deaths": 7,
+        "assists": 12,
+        "cs": 215,
+        "damage": 26547,
+        "vision": 29
+      },
+      {
+        "name": "Wiraak",
+        "role": "MID",
+        "champion": "Malzahar",
+        "kills": 4,
+        "deaths": 10,
+        "assists": 8,
+        "cs": 224,
+        "damage": 25802,
+        "vision": 23
+      },
+      {
+        "name": "Cedex",
+        "role": "ADC",
+        "champion": "Jinx",
+        "kills": 22,
+        "deaths": 8,
+        "assists": 12,
+        "cs": 300,
+        "damage": 74755,
+        "vision": 31
+      },
+      {
+        "name": "Phaeldque",
+        "role": "SUP",
+        "champion": "Thresh",
+        "kills": 1,
+        "deaths": 11,
+        "assists": 30,
+        "cs": 26,
+        "damage": 13218,
+        "vision": 113
       }
     ]
   }
