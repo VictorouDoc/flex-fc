@@ -2,12 +2,23 @@
 //  APP.JS — toute la logique. Rien à toucher ici normalement.
 // ============================================================
 
+// ---------- état (rechargeable via le bouton ⟳) ----------
+let STATE = { players: PLAYERS, games: GAMES };
+let STATS = {};
+let ACTIVE = [];
+
 // ---------- helpers ----------
 const $ = (sel) => document.querySelector(sel);
 const fmt = (n) => n.toLocaleString("fr-FR");
 const kda = (p) => p.deaths === 0 ? p.kills + p.assists : (p.kills + p.assists) / p.deaths;
 const kdaStr = (p) => kda(p).toFixed(1);
-const playerTag = (name) => (PLAYERS.find((p) => p.name === name) || {}).tag || "";
+
+// hash déterministe : le flame d'une perf ne change pas à chaque rechargement
+function hash(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+  return h;
+}
 
 const QUIPS = [
   "A déjà flamé le jungler. Était le jungler.",
@@ -28,6 +39,56 @@ const QUIPS = [
   "Présent en vocal, absent en game.",
 ];
 
+// ---------- flames du débrief, par tranche de note ----------
+const FLAMES = {
+  god: [ // 8+
+    "{kda} sur {champ}. Calme-toi, c'est de la flex, pas les Worlds.",
+    "{champ} injouable. On attend le même niveau demain, pas de pression.",
+    "A porté l'équipe sur son dos. L'équipe était lourde pourtant.",
+    "Perf de smurf. Ou alors les adversaires étaient en mousse, on penche pour ça.",
+    "Le seul à avoir lu le guide de {champ} apparemment.",
+  ],
+  good: [ // 6-8
+    "Bonne game sur {champ}. Profite, on l'encadre, ça n'arrive pas si souvent.",
+    "Solide. Pas spectaculaire, mais solide. Comme un tabouret.",
+    "{kda}, propre. Presque suspect d'ailleurs.",
+    "A fait son travail sur {champ}. C'est déjà énorme pour cette équipe.",
+    "Très correct. Le mot 'carry' est encore un peu fort, mais très correct.",
+  ],
+  mid: [ // 4-6
+    "Game anonyme sur {champ}. Présent sur la feuille de match, c'est tout.",
+    "Ni bon ni mauvais. L'eau tiède de la flex.",
+    "{kda}. Le strict minimum syndical.",
+    "A existé pendant {champ} game. Aucune preuve d'impact retenue.",
+    "Spectateur premium de sa propre game. Au moins il avait une bonne place.",
+  ],
+  bad: [ // 2.5-4
+    "{kda} sur {champ}. Y'a des mots, mais on va rester polis.",
+    "A confondu {champ} avec un sac de gold pour l'équipe d'en face.",
+    "Performance sponsorisée par l'équipe adverse.",
+    "{deaths} morts. Le respawn timer était son vrai duo de la soirée.",
+    "On a vu des bots avec plus d'impact. Des bots débranchés.",
+  ],
+  int: [ // <2.5
+    "{kda}. C'est pas une perf, c'est un acte de sabotage.",
+    "{deaths} morts sur {champ}. Riot devrait rembourser les 4 autres.",
+    "Détection d'int en cours... Confirmé. C'était bien volontaire ou c'est pire.",
+    "L'écran gris a passé plus de temps affiché que le jeu lui-même.",
+    "Perf à montrer aux écoles. En cours de 'ce qu'il ne faut pas faire'.",
+  ],
+};
+
+function flameFor(p, game) {
+  const score = perfScore(p, game);
+  const tier = score >= 8 ? "god" : score >= 6 ? "good" : score >= 4 ? "mid" : score >= 2.5 ? "bad" : "int";
+  const pool = FLAMES[tier];
+  const line = pool[hash(`${game.id}|${p.name}`) % pool.length];
+  return line
+    .replace(/\{champ\}/g, p.champion)
+    .replace(/\{kda\}/g, `${p.kills}/${p.deaths}/${p.assists}`)
+    .replace(/\{deaths\}/g, p.deaths);
+}
+
 // score de performance d'un joueur dans une game (0-10)
 function perfScore(p, game) {
   const teamKills = game.teamKills || game.players.reduce((s, x) => s + x.kills, 0) || 1;
@@ -45,16 +106,16 @@ function mvpAndNoob(game) {
 }
 
 // stats agrégées par joueur
-function aggregateStats() {
+function recompute() {
   const map = {};
-  PLAYERS.forEach((p) => {
+  STATE.players.forEach((p) => {
     map[p.name] = {
       name: p.name, tag: p.tag, games: 0, wins: 0,
       kills: 0, deaths: 0, assists: 0, damage: 0, cs: 0, vision: 0,
       champs: {}, mvps: 0, noobs: 0, scoreSum: 0,
     };
   });
-  GAMES.forEach((g) => {
+  STATE.games.forEach((g) => {
     const { mvp, noob } = mvpAndNoob(g);
     g.players.forEach((p) => {
       const s = map[p.name];
@@ -75,11 +136,34 @@ function aggregateStats() {
     s.avgScore = s.games ? s.scoreSum / s.games : 0;
     s.mainChamp = Object.entries(s.champs).sort((a, b) => b[1] - a[1])[0];
   });
-  return map;
+  STATS = map;
+  ACTIVE = Object.values(map).filter((s) => s.games > 0);
 }
 
-const STATS = aggregateStats();
-const ACTIVE = Object.values(STATS).filter((s) => s.games > 0);
+// ============================================================
+//  RECHARGEMENT DES DONNÉES (bouton ⟳)
+//  Re-télécharge data.js (mis à jour chaque nuit par le bot)
+//  et rafraîchit la page courante sans recharger le site.
+// ============================================================
+async function reloadData() {
+  const btn = $("#reload-btn");
+  btn.disabled = true;
+  btn.textContent = "⟳ Chargement...";
+  try {
+    const res = await fetch(`data.js?nocache=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const src = await res.text();
+    const data = new Function(`${src}; return { PLAYERS, GAMES };`)();
+    const diff = data.GAMES.length - STATE.games.length;
+    STATE = { players: data.PLAYERS, games: data.GAMES };
+    recompute();
+    renderAll();
+    btn.textContent = diff > 0 ? `✓ ${diff} nouvelle${diff > 1 ? "s" : ""} game${diff > 1 ? "s" : ""} !` : "✓ Rien de neuf";
+  } catch (e) {
+    btn.textContent = "✗ Erreur de chargement";
+  }
+  setTimeout(() => { btn.textContent = "⟳ Actualiser"; btn.disabled = false; }, 3000);
+}
 
 // ============================================================
 //  PAGE : GAMES
@@ -88,16 +172,16 @@ function renderGames() {
   const el = $("#page-games");
   let html = `
     <h2 class="page-title">Historique des flex</h2>
-    <p class="page-sub">${GAMES.length} games enregistrées. Chacune avec son héros... et son coupable.</p>
+    <p class="page-sub">${STATE.games.length} games enregistrées. Chacune avec son héros... et son coupable.</p>
   `;
 
-  if (!GAMES.length) {
-    html += `<div class="empty-note">Aucune game pour l'instant. Ajoutez-en dans <b>data.js</b> !</div>`;
+  if (!STATE.games.length) {
+    html += `<div class="empty-note">Aucune game pour l'instant.</div>`;
     el.innerHTML = html;
     return;
   }
 
-  [...GAMES].reverse().forEach((g) => {
+  [...STATE.games].reverse().forEach((g) => {
     const { mvp, noob } = mvpAndNoob(g);
     const cls = g.victory ? "win" : "loss";
     const rows = g.players.map((p) => {
@@ -114,6 +198,12 @@ function renderGames() {
           <td class="mono">${fmt(p.damage)}</td>
           <td class="mono">${p.vision}</td>
         </tr>`;
+    }).join("");
+
+    const flames = g.players.map((p) => {
+      const score = perfScore(p, g);
+      const icon = score >= 8 ? "🔥" : score >= 6 ? "👍" : score >= 4 ? "😐" : score >= 2.5 ? "🤨" : "🚨";
+      return `<li><span class="flame-icon">${icon}</span><b class="player-cell" data-player="${p.name}">${p.name}</b> <span class="flame-score mono">(${score.toFixed(1)}/10)</span> — ${flameFor(p, g)}</li>`;
     }).join("");
 
     html += `
@@ -134,6 +224,10 @@ function renderGames() {
           </thead>
           <tbody>${rows}</tbody>
         </table>
+        <div class="game-recap">
+          <div class="recap-title">💬 Le débrief</div>
+          <ul class="recap-list">${flames}</ul>
+        </div>
       </div>`;
   });
 
@@ -145,7 +239,7 @@ function renderGames() {
 // ============================================================
 function renderProfiles() {
   const el = $("#page-profiles");
-  const cards = PLAYERS.map((p, i) => {
+  const cards = STATE.players.map((p, i) => {
     const s = STATS[p.name];
     const quip = QUIPS[i % QUIPS.length];
     const mini = s.games
@@ -166,24 +260,24 @@ function renderProfiles() {
 
   el.innerHTML = `
     <h2 class="page-title">Le roster</h2>
-    <p class="page-sub">${PLAYERS.length} âmes perdues. Le roster change, le niveau reste constant (bas).</p>
+    <p class="page-sub">${STATE.players.length} âmes perdues. Le roster change, le niveau reste constant (bas).</p>
     <div class="profile-grid">${cards}</div>`;
 }
 
 function renderProfileDetail(name) {
   const el = $("#page-profiles");
   const s = STATS[name];
-  const idx = PLAYERS.findIndex((p) => p.name === name);
+  const idx = STATE.players.findIndex((p) => p.name === name);
   const quip = QUIPS[idx % QUIPS.length];
 
-  const games = GAMES.filter((g) => g.players.some((p) => p.name === name)).reverse();
+  const games = STATE.games.filter((g) => g.players.some((p) => p.name === name)).reverse();
   const rows = games.map((g) => {
     const p = g.players.find((x) => x.name === name);
     const { mvp, noob } = mvpAndNoob(g);
     const tagIcon = p.name === mvp.name ? " 👑" : p.name === noob.name ? " 🤡" : "";
     return `
       <tr>
-        <td class="${g.victory ? '' : 'dim'}" style="color:${g.victory ? 'var(--win)' : 'var(--loss)'};font-weight:700">${g.victory ? "W" : "L"}</td>
+        <td style="color:${g.victory ? 'var(--win)' : 'var(--loss)'};font-weight:700">${g.victory ? "W" : "L"}</td>
         <td>${p.champion}${tagIcon}</td>
         <td class="dim"><span class="role-tag">${p.role}</span></td>
         <td class="mono">${p.kills} / ${p.deaths} / ${p.assists}</td>
@@ -237,9 +331,8 @@ function renderRoast() {
 
   const by = (fn, dir = 1) => [...ACTIVE].sort((a, b) => dir * (fn(b) - fn(a)))[0];
 
-  // perfs individuelles par game
   let bestPerf = null, worstPerf = null;
-  GAMES.forEach((g) => {
+  STATE.games.forEach((g) => {
     g.players.forEach((p) => {
       const sc = perfScore(p, g);
       if (!bestPerf || sc > bestPerf.score) bestPerf = { ...p, score: sc, game: g };
@@ -303,19 +396,17 @@ function renderStats() {
     return;
   }
 
-  const totalGames = GAMES.length;
-  const totalWins = GAMES.filter((g) => g.victory).length;
+  const totalGames = STATE.games.length;
+  const totalWins = STATE.games.filter((g) => g.victory).length;
   const totalKills = ACTIVE.reduce((s, p) => s + p.kills, 0);
   const totalDeaths = ACTIVE.reduce((s, p) => s + p.deaths, 0);
 
-  // champion le plus joué
   const champCount = {};
-  GAMES.forEach((g) => g.players.forEach((p) => { champCount[p.champion] = (champCount[p.champion] || 0) + 1; }));
+  STATE.games.forEach((g) => g.players.forEach((p) => { champCount[p.champion] = (champCount[p.champion] || 0) + 1; }));
   const topChamps = Object.entries(champCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
-  // line-ups (composition exacte de 5)
   const lineups = {};
-  GAMES.forEach((g) => {
+  STATE.games.forEach((g) => {
     const key = g.players.map((p) => p.name).sort().join(" · ");
     if (!lineups[key]) lineups[key] = { games: 0, wins: 0 };
     lineups[key].games++;
@@ -330,7 +421,6 @@ function renderStats() {
         <td class="mono">${Math.round((v.wins / v.games) * 100)}%</td>
       </tr>`).join("");
 
-  // classement joueurs
   const ranking = [...ACTIVE].sort((a, b) => b.avgScore - a.avgScore);
   const maxScore = Math.max(...ranking.map((s) => s.avgScore), 1);
   const rankRows = ranking.map((s, i) => `
@@ -393,6 +483,10 @@ function renderStats() {
 // ============================================================
 const RENDERERS = { games: renderGames, profiles: renderProfiles, roast: renderRoast, stats: renderStats };
 
+function renderAll() {
+  Object.values(RENDERERS).forEach((fn) => fn());
+}
+
 document.querySelectorAll(".nav-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".nav-btn").forEach((b) => b.classList.remove("active"));
@@ -416,5 +510,8 @@ document.addEventListener("click", (e) => {
   window.scrollTo({ top: 0 });
 });
 
+$("#reload-btn").addEventListener("click", reloadData);
+
 // rendu initial
-Object.values(RENDERERS).forEach((fn) => fn());
+recompute();
+renderAll();
