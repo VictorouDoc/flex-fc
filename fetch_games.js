@@ -67,6 +67,18 @@ function fmtDuration(sec) {
   return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
 }
 
+// games déjà présentes dans data.js : on les garde même si elles sont
+// sorties de la fenêtre des 100 derniers matchs Riot, et on ne les
+// re-télécharge pas (économie de rate limit).
+function loadExistingGames() {
+  try {
+    const src = fs.readFileSync("data.js", "utf8");
+    return new Function(`${src}; return GAMES;`)();
+  } catch {
+    return [];
+  }
+}
+
 async function main() {
   // 1) Riot ID -> PUUID
   console.log("1/3 Résolution des comptes...");
@@ -89,8 +101,10 @@ async function main() {
     ids.forEach((id) => { matchCount[id] = (matchCount[id] || 0) + 1; });
   }
 
+  const existing = loadExistingGames();
+  const knownIds = new Set(existing.map((g) => g.id));
   const candidates = Object.entries(matchCount)
-    .filter(([, n]) => n >= MIN_ROSTER)
+    .filter(([id, n]) => n >= MIN_ROSTER && !knownIds.has(id))
     .sort((a, b) => b[0].localeCompare(a[0])) // plus récentes d'abord
     .slice(0, MAX_GAMES)
     .map(([id]) => id);
@@ -136,7 +150,10 @@ async function main() {
     process.stdout.write(`  ${games.length}/${candidates.length}\r`);
   }
 
-  games.sort((a, b) => a.date.localeCompare(b.date));
+  const merged = [...existing, ...games];
+  merged.sort((a, b) => a.date.localeCompare(b.date));
+  games.length = 0;
+  games.push(...merged);
 
   // 4) Génération de data.js
   const out = `// ============================================================
