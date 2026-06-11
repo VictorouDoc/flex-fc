@@ -151,24 +151,67 @@ function recompute() {
 //  Re-télécharge data.js (mis à jour chaque nuit par le bot)
 //  et rafraîchit la page courante sans recharger le site.
 // ============================================================
+// fusionne deux listes de games sans doublon (par id), triées par date
+function mergeGames(base, extra) {
+  const ids = new Set(base.map((g) => g.id));
+  const merged = [...base, ...extra.filter((g) => !ids.has(g.id))];
+  merged.sort((a, b) => a.date.localeCompare(b.date) || String(a.id).localeCompare(String(b.id)));
+  return merged;
+}
+
 async function reloadData() {
   const btn = $("#reload-btn");
   btn.disabled = true;
-  btn.textContent = "⟳ Chargement...";
+  btn.textContent = "⟳ Recherche...";
+  const before = STATE.games.length;
   try {
+    // 1) data.js le plus frais (consolidé chaque nuit)
     const res = await fetch(`data.js?nocache=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const src = await res.text();
     const data = new Function(`${src}; return { PLAYERS, GAMES };`)();
-    const diff = data.GAMES.length - STATE.games.length;
-    STATE = { players: data.PLAYERS, games: data.GAMES };
+    let games = data.GAMES;
+    let cooldown = 0;
+
+    if (COMMENTS_API) {
+      // 2) demande au worker d'interroger Riot en direct (cooldown 2 min)
+      const known = mergeGames(games, STATE.games).map((g) => g.id);
+      const upd = await fetch(`${COMMENTS_API}/update`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ known }),
+      });
+      if (upd.status === 429) cooldown = (await upd.json()).wait || 0;
+      // 3) toutes les games live connues du worker
+      const live = await (await fetch(`${COMMENTS_API}/games`, { cache: "no-store" })).json();
+      games = mergeGames(games, live);
+    }
+
+    STATE = { ...STATE, players: data.PLAYERS, games };
     recompute();
     renderAll();
-    btn.textContent = diff > 0 ? `✓ ${diff} nouvelle${diff > 1 ? "s" : ""} game${diff > 1 ? "s" : ""} !` : "✓ Rien de neuf";
+    const diff = games.length - before;
+    btn.textContent = diff > 0
+      ? `✓ ${diff} nouvelle${diff > 1 ? "s" : ""} game${diff > 1 ? "s" : ""} !`
+      : cooldown > 0 ? `⏳ Réessaie dans ${cooldown}s` : "✓ Rien de neuf";
   } catch (e) {
     btn.textContent = "✗ Erreur de chargement";
   }
-  setTimeout(() => { btn.textContent = "⟳ Actualiser"; btn.disabled = false; }, 3000);
+  setTimeout(() => { btn.textContent = "⟳ Actualiser"; btn.disabled = false; }, 3500);
+}
+
+// au chargement : récupère aussi les games live pas encore consolidées dans data.js
+async function loadLiveGames() {
+  if (!COMMENTS_API) return;
+  try {
+    const live = await (await fetch(`${COMMENTS_API}/games`, { cache: "no-store" })).json();
+    if (!Array.isArray(live) || !live.length) return;
+    const merged = mergeGames(STATE.games, live);
+    if (merged.length === STATE.games.length) return;
+    STATE = { ...STATE, games: merged };
+    recompute();
+    renderAll();
+  } catch {}
 }
 
 // ============================================================
@@ -633,3 +676,4 @@ $("#reload-btn").addEventListener("click", reloadData);
 // rendu initial
 recompute();
 renderAll();
+loadLiveGames();
