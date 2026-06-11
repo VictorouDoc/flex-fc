@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FLEX SQUAD — Le récap de la honte</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">⚔️</span>
+      <div>
+        <h1>FLEX SQUAD</h1>
+        <p class="tagline">5 inscrits, 0 cerveau, 1 rêve.</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" data-page="games">🎮 Games</button>
+      <button class="nav-btn" data-page="profiles">👤 Profils</button>
+      <button class="nav-btn" data-page="roast">🔥 Roasting</button>
+      <button class="nav-btn" data-page="stats">📊 Stats</button>
+    </nav>
+  </header>
+
+  <main id="app">
+    <section id="page-games" class="page active"></section>
+    <section id="page-profiles" class="page"></section>
+    <section id="page-roast" class="page"></section>
+    <section id="page-stats" class="page"></section>
+  </main>
+
+  <footer class="footer">
+    <p>Fait avec amour et tilt. Aucun joueur n'a été ménagé dans la conception de ce site.</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
