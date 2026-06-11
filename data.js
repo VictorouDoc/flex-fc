@@ -1,6 +1,6 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 11/06/2026 20:18:30
+//  le 11/06/2026 21:32:06
 //  74 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
@@ -68,10 +68,6 @@ const PLAYERS = [
   },
   {
     "name": "Wiraak",
-    "tag": "#EUW"
-  },
-  {
-    "name": "Phaeldque",
     "tag": "#EUW"
   }
 ];
@@ -910,7 +906,7 @@ const GAMES = [
         "vision": 28
       },
       {
-        "name": "Phaeldque",
+        "name": "ThanosDZ",
         "role": "SUP",
         "champion": "Pantheon",
         "kills": 8,
@@ -975,7 +971,7 @@ const GAMES = [
         "vision": 15
       },
       {
-        "name": "Phaeldque",
+        "name": "ThanosDZ",
         "role": "SUP",
         "champion": "Xerath",
         "kills": 9,
@@ -1007,7 +1003,7 @@ const GAMES = [
         "vision": 11
       },
       {
-        "name": "Phaeldque",
+        "name": "ThanosDZ",
         "role": "JGL",
         "champion": "Shyvana",
         "kills": 5,
@@ -3694,7 +3690,7 @@ const GAMES = [
         "vision": 38
       },
       {
-        "name": "Phaeldque",
+        "name": "ThanosDZ",
         "role": "ADC",
         "champion": "Ezreal",
         "kills": 14,
@@ -3737,7 +3733,7 @@ const GAMES = [
         "vision": 54
       },
       {
-        "name": "Phaeldque",
+        "name": "ThanosDZ",
         "role": "JGL",
         "champion": "Ekko",
         "kills": 11,
@@ -3802,7 +3798,7 @@ const GAMES = [
         "vision": 40
       },
       {
-        "name": "Phaeldque",
+        "name": "ThanosDZ",
         "role": "JGL",
         "champion": "JarvanIV",
         "kills": 4,
@@ -4777,7 +4773,7 @@ const GAMES = [
         "vision": 18
       },
       {
-        "name": "Phaeldque",
+        "name": "ThanosDZ",
         "role": "JGL",
         "champion": "Khazix",
         "kills": 7,
@@ -4875,7 +4871,7 @@ const GAMES = [
         "vision": 31
       },
       {
-        "name": "Phaeldque",
+        "name": "ThanosDZ",
         "role": "SUP",
         "champion": "Thresh",
         "kills": 1,

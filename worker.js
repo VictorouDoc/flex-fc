@@ -31,7 +31,7 @@ const ROSTER = [
   { name: "Kanye West",     tag: "JLOVE" },
   { name: "LaDid",          tag: "LaDid" },
   { name: "Wiraak",         tag: "EUW"   },
-  { name: "Phaeldque",      tag: "EUW"   },
+  { name: "Phaeldque",      tag: "EUW", as: "ThanosDZ" }, // smurf de ThanosDZ
 ];
 const MIN_ROSTER = 5;
 const COOLDOWN_MS = 2 * 60 * 1000;
@@ -62,14 +62,14 @@ async function riot(path, env) {
 
 // puuids du roster, résolus une fois puis gardés en KV
 async function getPuuids(env) {
-  let map = await env.COMMENTS.get("puuids", "json");
+  let map = await env.COMMENTS.get("puuids_v2", "json");
   if (map && Object.keys(map).length >= ROSTER.length) return map;
   map = {};
   for (const p of ROSTER) {
     const acc = await riot(`/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(p.name)}/${encodeURIComponent(p.tag)}`, env);
-    if (acc) map[acc.puuid] = p.name;
+    if (acc) map[acc.puuid] = p.as || p.name; // les smurfs sont crédités à leur propriétaire
   }
-  await env.COMMENTS.put("puuids", JSON.stringify(map));
+  await env.COMMENTS.put("puuids_v2", JSON.stringify(map));
   return map;
 }
 

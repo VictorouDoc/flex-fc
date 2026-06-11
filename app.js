@@ -105,7 +105,8 @@ function perfScore(p, game) {
   const kp = Math.min(((p.kills + p.assists) / teamKills) / 0.7, 1); // kill participation
   const ds = Math.min((p.damage / teamDamage) / 0.28, 1);            // damage share
   const k = Math.min(kda(p) / 5, 1);                                  // kda
-  return Math.round((k * 4 + kp * 3 + ds * 3) * 10) / 10; // note sur 10
+  const malus = game.victory ? 1 : 0.8; // une défaite, ça se paie
+  return Math.round((k * 4 + kp * 3 + ds * 3) * malus * 10) / 10; // note sur 10
 }
 
 function mvpAndNoob(game) {

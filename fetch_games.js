@@ -22,7 +22,9 @@ const MATCHES_PER_PLAYER = 100; // historique de matchlist par joueur
 const MIN_ROSTER = 5;           // min de potes dans la même équipe
 const MAX_GAMES = 80;           // plafond de games à télécharger
 
-const PLAYERS = [
+// Comptes Riot suivis. `as` = pseudo d'affichage si c'est un smurf :
+// toutes les games du compte sont créditées à la personne indiquée.
+const ACCOUNTS = [
   { name: "Pyyrat",         tag: "#ASAP"  },
   { name: "Cedex",          tag: "#0000"  },
   { name: "Thanus",         tag: "#SODO"  },
@@ -39,8 +41,15 @@ const PLAYERS = [
   { name: "Kanye West",     tag: "#JLOVE" },
   { name: "LaDid",          tag: "#LaDid" },
   { name: "Wiraak",         tag: "#EUW"   },
-  { name: "Phaeldque",      tag: "#EUW"   },
+  { name: "Phaeldque",      tag: "#EUW", as: "ThanosDZ" }, // smurf de ThanosDZ
 ];
+
+// roster affiché sur le site : une entrée par personne
+const PLAYERS = ACCOUNTS.filter((a) => !a.as).map(({ name, tag }) => ({ name, tag }));
+
+// renomme les smurfs dans les games (y compris l'historique déjà en data.js)
+const ALIAS = Object.fromEntries(ACCOUNTS.filter((a) => a.as).map((a) => [a.name, a.as]));
+const canon = (name) => ALIAS[name] || name;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -84,11 +93,11 @@ async function main() {
   // 1) Riot ID -> PUUID
   console.log("1/3 Résolution des comptes...");
   const puuidToName = {};
-  for (const p of PLAYERS) {
+  for (const p of ACCOUNTS) {
     const tag = p.tag.replace("#", "");
     const acc = await riot(`/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(p.name)}/${encodeURIComponent(tag)}`);
     if (!acc) { console.log(`  ✗ ${p.name} ${p.tag} introuvable`); continue; }
-    puuidToName[acc.puuid] = p.name;
+    puuidToName[acc.puuid] = canon(p.name);
     console.log(`  ✓ ${p.name} ${p.tag}`);
   }
 
@@ -102,7 +111,10 @@ async function main() {
     ids.forEach((id) => { matchCount[id] = (matchCount[id] || 0) + 1; });
   }
 
-  const existing = loadExistingGames();
+  const existing = loadExistingGames().map((g) => ({
+    ...g,
+    players: g.players.map((p) => ({ ...p, name: canon(p.name) })),
+  }));
   const knownIds = new Set(existing.map((g) => g.id));
   const candidates = Object.entries(matchCount)
     .filter(([id, n]) => n >= MIN_ROSTER && !knownIds.has(id))
