@@ -2,14 +2,20 @@
 //  APP.JS — toute la logique. Rien à toucher ici normalement.
 // ============================================================
 
+// ---------- config ----------
+// URL du worker Cloudflare pour les commentaires (voir README).
+// Tant que c'est vide, la zone commentaires affiche un message d'attente.
+const COMMENTS_API = "";
+
 // ---------- état (rechargeable via le bouton ⟳) ----------
-let STATE = { players: PLAYERS, games: GAMES };
+let STATE = { players: PLAYERS, games: GAMES, gamesOrder: "asc" };
 let STATS = {};
 let ACTIVE = [];
 
 // ---------- helpers ----------
 const $ = (sel) => document.querySelector(sel);
 const fmt = (n) => n.toLocaleString("fr-FR");
+const esc = (s) => { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; };
 const kda = (p) => p.deaths === 0 ? p.kills + p.assists : (p.kills + p.assists) / p.deaths;
 const kdaStr = (p) => kda(p).toFixed(1);
 
@@ -170,9 +176,12 @@ async function reloadData() {
 // ============================================================
 function renderGames() {
   const el = $("#page-games");
+  const asc = STATE.gamesOrder === "asc";
   let html = `
     <h2 class="page-title">Historique des flex</h2>
-    <p class="page-sub">${STATE.games.length} games enregistrées. Chacune avec son héros... et son coupable.</p>
+    <p class="page-sub">${STATE.games.length} games enregistrées. Chacune avec son héros... et son coupable.
+      <button class="order-btn" id="order-btn">📅 ${asc ? "Plus anciennes d'abord" : "Plus récentes d'abord"} ↕</button>
+    </p>
   `;
 
   if (!STATE.games.length) {
@@ -181,7 +190,8 @@ function renderGames() {
     return;
   }
 
-  [...STATE.games].reverse().forEach((g) => {
+  const ordered = asc ? [...STATE.games] : [...STATE.games].reverse();
+  ordered.forEach((g) => {
     const { mvp, noob } = mvpAndNoob(g);
     const cls = g.victory ? "win" : "loss";
     const rows = g.players.map((p) => {
@@ -228,11 +238,88 @@ function renderGames() {
           <div class="recap-title">💬 Le débrief</div>
           <ul class="recap-list">${flames}</ul>
         </div>
+        ${commentsBlock(g)}
       </div>`;
   });
 
   el.innerHTML = html;
+  $("#order-btn").addEventListener("click", () => {
+    STATE.gamesOrder = asc ? "desc" : "asc";
+    renderGames();
+    window.scrollTo({ top: 0 });
+  });
+  loadComments();
 }
+
+// ============================================================
+//  COMMENTAIRES (stockés sur le worker Cloudflare)
+// ============================================================
+function commentsBlock(g) {
+  return `
+    <div class="game-comments" data-game="${g.id}">
+      <div class="recap-title">🗨️ Commentaires</div>
+      <div class="comments-list"><span class="dim">${COMMENTS_API ? "Chargement..." : "Commentaires bientôt disponibles (serveur en cours d'installation)."}</span></div>
+      ${COMMENTS_API ? `
+      <form class="comment-form">
+        <select name="author" required>
+          <option value="" disabled selected>Qui es-tu ?</option>
+          ${STATE.players.map((p) => `<option>${esc(p.name)}</option>`).join("")}
+        </select>
+        <input name="text" maxlength="300" required placeholder="Ton commentaire (reste poli, ou pas)" autocomplete="off" />
+        <button type="submit">Envoyer</button>
+      </form>` : ""}
+    </div>`;
+}
+
+let commentsCache = null;
+async function loadComments(force = false) {
+  if (!COMMENTS_API) return;
+  if (!commentsCache || force) {
+    try {
+      commentsCache = await (await fetch(`${COMMENTS_API}/comments`, { cache: "no-store" })).json();
+    } catch {
+      commentsCache = {};
+    }
+  }
+  document.querySelectorAll(".game-comments").forEach((el) => {
+    const list = commentsCache[el.dataset.game] || [];
+    el.querySelector(".comments-list").innerHTML = list.length
+      ? list.map((c) => `
+          <div class="comment">
+            <b class="player-cell" data-player="${esc(c.author)}">${esc(c.author)}</b>
+            <span class="dim comment-date">${new Date(c.date).toLocaleDateString("fr-FR")}</span>
+            <div class="comment-text">${esc(c.text)}</div>
+          </div>`).join("")
+      : `<span class="dim">Aucun commentaire. Personne n'ose.</span>`;
+  });
+}
+
+document.addEventListener("submit", async (e) => {
+  const form = e.target.closest(".comment-form");
+  if (!form) return;
+  e.preventDefault();
+  const game = form.closest(".game-comments").dataset.game;
+  const author = form.author.value;
+  const text = form.text.value.trim();
+  if (!author || !text) return;
+  const btn = form.querySelector("button");
+  btn.disabled = true;
+  btn.textContent = "...";
+  try {
+    const r = await fetch(`${COMMENTS_API}/comments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ game, author, text }),
+    });
+    if (!r.ok) throw new Error();
+    form.text.value = "";
+    await loadComments(true);
+  } catch {
+    alert("Erreur d'envoi du commentaire, réessaie.");
+  }
+  btn.disabled = false;
+  btn.textContent = "Envoyer";
+});
 
 // ============================================================
 //  PAGE : PROFILS
@@ -497,6 +584,37 @@ document.querySelectorAll(".nav-btn").forEach((btn) => {
     RENDERERS[page]();
     window.scrollTo({ top: 0 });
   });
+});
+
+// ---------- tri des tableaux : clic sur un en-tête = croissant/décroissant ----------
+document.addEventListener("click", (e) => {
+  const th = e.target.closest("th");
+  if (!th) return;
+  const table = th.closest("table");
+  if (!table || !table.tBodies[0]) return;
+
+  const idx = [...th.parentNode.children].indexOf(th);
+  const dir = th.dataset.dir === "desc" ? 1 : -1; // 1er clic : décroissant (logique leaderboard)
+  table.querySelectorAll("th").forEach((h) => { delete h.dataset.dir; h.classList.remove("sort-asc", "sort-desc"); });
+  th.dataset.dir = dir === 1 ? "asc" : "desc";
+  th.classList.add(dir === 1 ? "sort-asc" : "sort-desc");
+
+  const cellVal = (row) => (row.cells[idx] ? row.cells[idx].textContent.trim() : "");
+  const toNum = (s) => {
+    const dateM = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/); // dates fr
+    if (dateM) return +(dateM[3] + dateM[2] + dateM[1]);
+    const m = s.replace(/[\s  ]/g, "").replace("%", "").replace(",", ".").match(/^-?\d+(\.\d+)?/);
+    return m ? parseFloat(m[0]) : null;
+  };
+
+  const rows = [...table.tBodies[0].rows];
+  rows.sort((a, b) => {
+    const va = cellVal(a), vb = cellVal(b);
+    const na = toNum(va), nb = toNum(vb);
+    if (na !== null && nb !== null) return dir * (na - nb);
+    return dir * va.localeCompare(vb, "fr");
+  });
+  rows.forEach((r) => table.tBodies[0].appendChild(r));
 });
 
 // clic sur un nom de joueur n'importe où → fiche profil

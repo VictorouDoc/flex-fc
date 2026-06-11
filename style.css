@@ -137,7 +137,13 @@ th {
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 1px;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
 }
+th:hover { color: var(--text); }
+th.sort-desc::after { content: " ▼"; color: var(--accent); }
+th.sort-asc::after  { content: " ▲"; color: var(--accent); }
 td { padding: 11px 14px; border-top: 1px solid var(--border); }
 tbody tr { transition: background 0.15s; }
 tbody tr:hover { background: var(--card-hover); }
@@ -186,6 +192,53 @@ tr.row-noob td:first-child { box-shadow: inset 3px 0 0 var(--loss); }
 .recap-list b { color: var(--text); }
 .flame-icon { margin-right: 6px; }
 .flame-score { font-size: 0.72rem; }
+
+/* ---------- ordre des games ---------- */
+.order-btn {
+  margin-left: 12px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.order-btn:hover { color: var(--text); border-color: var(--accent); }
+
+/* ---------- commentaires ---------- */
+.game-comments {
+  border-top: 1px solid var(--border);
+  padding: 14px 22px 18px;
+}
+.comment { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.83rem; }
+.comment:last-child { border-bottom: none; }
+.comment-date { font-size: 0.7rem; margin-left: 8px; }
+.comment-text { color: var(--text-dim); margin-top: 2px; line-height: 1.5; }
+.comment-form { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.comment-form select, .comment-form input {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: 0.8rem;
+}
+.comment-form input { flex: 1; min-width: 180px; }
+.comment-form button {
+  background: var(--accent);
+  border: none;
+  color: #0d1117;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.comment-form button:disabled { opacity: 0.6; cursor: wait; }
 
 /* ---------- profile grid ---------- */
 .profile-grid {
