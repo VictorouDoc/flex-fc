@@ -41,7 +41,7 @@ const ACCOUNTS = [
   { name: "Kanye West",     tag: "#JLOVE" },
   { name: "LaDid",          tag: "#LaDid" },
   { name: "Wiraak",         tag: "#EUW"   },
-  { name: "Phaeldque",      tag: "#EUW", as: "ThanosDZ" }, // smurf de ThanosDZ
+  { name: "Phaeldque",      tag: "#EUW", as: "Thanus" }, // smurf de Thanus
 ];
 
 // roster affiché sur le site : une entrée par personne

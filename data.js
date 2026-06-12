@@ -1,6 +1,6 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 12/06/2026 08:14:32
+//  le 12/06/2026 18:07:18
 //  76 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
@@ -906,7 +906,7 @@ const GAMES = [
         "vision": 28
       },
       {
-        "name": "ThanosDZ",
+        "name": "Thanus",
         "role": "SUP",
         "champion": "Pantheon",
         "kills": 8,
@@ -971,7 +971,7 @@ const GAMES = [
         "vision": 15
       },
       {
-        "name": "ThanosDZ",
+        "name": "Thanus",
         "role": "SUP",
         "champion": "Xerath",
         "kills": 9,
@@ -1003,7 +1003,7 @@ const GAMES = [
         "vision": 11
       },
       {
-        "name": "ThanosDZ",
+        "name": "Thanus",
         "role": "JGL",
         "champion": "Shyvana",
         "kills": 5,
@@ -3690,7 +3690,7 @@ const GAMES = [
         "vision": 38
       },
       {
-        "name": "ThanosDZ",
+        "name": "Thanus",
         "role": "ADC",
         "champion": "Ezreal",
         "kills": 14,
@@ -3733,7 +3733,7 @@ const GAMES = [
         "vision": 54
       },
       {
-        "name": "ThanosDZ",
+        "name": "Thanus",
         "role": "JGL",
         "champion": "Ekko",
         "kills": 11,
@@ -3798,7 +3798,7 @@ const GAMES = [
         "vision": 40
       },
       {
-        "name": "ThanosDZ",
+        "name": "Thanus",
         "role": "JGL",
         "champion": "JarvanIV",
         "kills": 4,
@@ -4773,7 +4773,7 @@ const GAMES = [
         "vision": 18
       },
       {
-        "name": "ThanosDZ",
+        "name": "Thanus",
         "role": "JGL",
         "champion": "Khazix",
         "kills": 7,
@@ -4871,7 +4871,7 @@ const GAMES = [
         "vision": 31
       },
       {
-        "name": "ThanosDZ",
+        "name": "Thanus",
         "role": "SUP",
         "champion": "Thresh",
         "kills": 1,
@@ -4903,7 +4903,7 @@ const GAMES = [
         "vision": 16
       },
       {
-        "name": "ThanosDZ",
+        "name": "Thanus",
         "role": "JGL",
         "champion": "LeeSin",
         "kills": 10,
@@ -4979,7 +4979,7 @@ const GAMES = [
         "vision": 32
       },
       {
-        "name": "ThanosDZ",
+        "name": "Thanus",
         "role": "MID",
         "champion": "Annie",
         "kills": 9,
