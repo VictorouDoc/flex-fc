@@ -8,7 +8,7 @@
 const COMMENTS_API = "https://flex-comments.champagne-victor28000-6a2.workers.dev";
 
 // ---------- état (rechargeable via le bouton ⟳) ----------
-let STATE = { players: PLAYERS, games: GAMES, gamesOrder: "asc" };
+let STATE = { players: PLAYERS, games: GAMES, gamesOrder: "desc" };
 let STATS = {};
 let ACTIVE = [];
 
