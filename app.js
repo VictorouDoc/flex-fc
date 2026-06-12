@@ -26,6 +26,18 @@ function hash(str) {
   return h;
 }
 
+// punchlines personnalisées — prioritaires sur les QUIPS génériques
+const LORE = {
+  "Cedex": "Petit et lent IRL. En game pareil, mais là au moins il peut blame le ping.",
+  "Jordan Carter": "Prend autant de place dans le vocal que sur la map. Statistiquement, il parle plus qu'il ne ward.",
+  "Wiraak": "Chouffin certifié. Voit tout IRL — dommage que le score de vision ne compte pas les regards.",
+  "Miso": "Attention whore assumé. Si tu lis cette carte, c'est exactement ce qu'il voulait.",
+  "Kanye West": "L9 certifié. Le /mute all a été inventé pour lui, et il le prend comme un compliment.",
+  "Ξnjin": "Ne joue jamais. Membre honoraire du roster, présence purement spirituelle.",
+  "LaDid": "Son niveau de jeu monte avec le taux d'alcoolémie. Malheureusement, le plafond reste bas.",
+  "Thanus": "Soulève plus de fonte qu'il ne gagne de teamfights. Le seul flex qu'il maîtrise, c'est à la salle.",
+};
+
 const QUIPS = [
   "A déjà flamé le jungler. Était le jungler.",
   "Ping '?' plus vite que son ombre.",
@@ -375,7 +387,7 @@ function renderProfiles() {
   const el = $("#page-profiles");
   const cards = STATE.players.map((p, i) => {
     const s = STATS[p.name];
-    const quip = QUIPS[i % QUIPS.length];
+    const quip = LORE[p.name] || QUIPS[i % QUIPS.length];
     const mini = s.games
       ? `<div class="mini-stats">
           <div class="mini-stat"><b>${s.games}</b><span>games</span></div>
@@ -402,7 +414,7 @@ function renderProfileDetail(name) {
   const el = $("#page-profiles");
   const s = STATS[name];
   const idx = STATE.players.findIndex((p) => p.name === name);
-  const quip = QUIPS[idx % QUIPS.length];
+  const quip = LORE[name] || QUIPS[idx % QUIPS.length];
 
   const games = STATE.games.filter((g) => g.players.some((p) => p.name === name)).reverse();
   const rows = games.map((g) => {
@@ -525,6 +537,23 @@ function renderRoast() {
   const bff = [...pairList].sort((a, b) => b[1].games - a[1].games)[0];
   const doomedDuo = [...pairList].sort((a, b) => (a[1].wins / a[1].games) - (b[1].wins / b[1].games))[0];
 
+  // kill participation moyenne par joueur (qui veut être sur la photo)
+  const kpBy = {};
+  STATE.games.forEach((g) => {
+    const tk = g.teamKills || g.players.reduce((s, x) => s + x.kills, 0) || 1;
+    g.players.forEach((p) => { (kpBy[p.name] = kpBy[p.name] || []).push((p.kills + p.assists) / tk); });
+  });
+  const kpList = Object.entries(kpBy)
+    .filter(([, v]) => v.length >= MIN_G)
+    .map(([n, v]) => [n, v.reduce((a, b) => a + b, 0) / v.length])
+    .sort((a, b) => b[1] - a[1]);
+  const spotlight = kpList[0];
+  const figurant = kpList[kpList.length - 1];
+
+  const teaBag = byPool((s) => s.damage / s.games, -1);
+  const greffier = byPool((s) => s.assists / s.games);
+  const pilier = byPool((s) => s.games);
+
   // la soirée noire : la date avec le plus de défaites
   const byDate = {};
   STATE.games.forEach((g) => {
@@ -569,6 +598,18 @@ function renderRoast() {
       detail: `${Object.keys(tourist.champs).length} champions différents. Maîtrise : aucune. Curiosité : infinie.` },
     { cls: "shame", emoji: "🛋️", title: "Le sans-vie", who: noLife[0],
       detail: `${Math.round(noLife[1] / 60)}h${String(Math.round(noLife[1] % 60)).padStart(2, "0")} passées en flex avec nous. Et il dit qu'il a "pas le temps" pour le reste.` },
+    ...(spotlight ? [
+      { cls: "gold",  emoji: "💅", title: "L'attention whore", who: spotlight[0],
+        detail: `${Math.round(spotlight[1] * 100)}% de kill participation moyenne. Aucun kill ne se fait sans lui sur la photo. AUCUN.` },
+      { cls: "shame", emoji: "🧍", title: "Le figurant", who: figurant[0],
+        detail: `${Math.round(figurant[1] * 100)}% de kill participation. Les teamfights se passent, lui il regarde. Parfois sur l'autre écran.` },
+    ] : []),
+    { cls: "shame", emoji: "🫖", title: "Le sachet de thé", who: teaBag.name,
+      detail: `${fmt(Math.round(teaBag.damage / teaBag.games))} dégâts par game. Il tape doucement pour ne pas réveiller l'ennemi.` },
+    { cls: "gold",  emoji: "✍️", title: "Le greffier", who: greffier.name,
+      detail: `${(greffier.assists / greffier.games).toFixed(1)} assists par game. Il ne tue personne, mais il signe tous les procès-verbaux.` },
+    { cls: "gold",  emoji: "🍻", title: "Le pilier de comptoir", who: pilier.name,
+      detail: `Présent dans ${Math.round((pilier.games / STATE.games.length) * 100)}% des games. Le serveur Discord, c'est chez lui maintenant.` },
     ...(rollercoaster ? [
       { cls: "shame", emoji: "🎢", title: "Les montagnes russes", who: rollercoaster[0],
         detail: `Écart-type de ${rollercoaster[1].toFixed(1)} sur ses notes. Capable du meilleur comme du pire, souvent dans la même soirée.` },
