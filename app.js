@@ -418,6 +418,38 @@ function renderProfileDetail(name) {
 
   const games = STATE.games.filter((g) => g.players.some((p) => p.name === name)).reverse();
 
+  // courbe de forme : moyenne glissante des notes (5 dernières games)
+  const chrono = [...games].reverse();
+  const scores = chrono.map((g) => perfScore(g.players.find((x) => x.name === name), g));
+  let formBlock = "";
+  if (scores.length >= 5) {
+    const roll = scores.map((_, i) => {
+      const win = scores.slice(Math.max(0, i - 4), i + 1);
+      return win.reduce((a, b) => a + b, 0) / win.length;
+    });
+    const W = 600, H = 80, PAD = 6;
+    const x = (i) => PAD + (i / (roll.length - 1)) * (W - 2 * PAD);
+    const y = (v) => H - PAD - (v / 10) * (H - 2 * PAD);
+    const pts = roll.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+    const last = roll[roll.length - 1];
+    const prev = roll[Math.max(0, roll.length - 6)];
+    const trend = last - prev > 0.4 ? "📈 En progression. Profitez-en, ça ne durera pas." :
+                  last - prev < -0.4 ? "📉 En chute libre. Quelqu'un lui dit ou pas ?" :
+                  "➡️ Stable. Dans son cas, c'est pas forcément une bonne nouvelle.";
+    formBlock = `
+      <div class="stats-section" style="margin-top:24px">
+        <h3>Sa forme (moyenne glissante sur 5 games)</h3>
+        <div class="table-card spark-card">
+          <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="spark">
+            <line x1="${PAD}" y1="${y(5)}" x2="${W - PAD}" y2="${y(5)}" class="spark-mid" />
+            <polyline points="${pts}" class="spark-line" />
+            <circle cx="${x(roll.length - 1)}" cy="${y(last)}" r="3" class="spark-dot" />
+          </svg>
+          <div class="spark-caption">${trend} Dernière forme : <b class="mono">${last.toFixed(1)}/10</b></div>
+        </div>
+      </div>`;
+  }
+
   // winrate par champion
   const champStats = {};
   games.forEach((g) => {
@@ -474,6 +506,7 @@ function renderProfileDetail(name) {
         <p class="quip">« ${quip} »</p>
         ${statBoxes}
       </div>
+      ${formBlock}
       ${s.games ? `
       <div class="stats-section" style="margin-top:24px">
         <h3>Ses champions</h3>
@@ -737,6 +770,34 @@ function renderStats() {
       <div class="mono month-count">${v.games} games · ${Math.round((v.wins / v.games) * 100)}% WR</div>
     </div>`).join("");
 
+  // palmarès du mois : meilleure et pire note moyenne sur le dernier mois joué
+  const lastMonth = months[months.length - 1][0];
+  const monthLabel = new Date(lastMonth + "-01").toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+  const monthPerf = {};
+  STATE.games.filter((g) => g.date.startsWith(lastMonth)).forEach((g) => g.players.forEach((p) => {
+    const s = monthPerf[p.name] = monthPerf[p.name] || { games: 0, scoreSum: 0 };
+    s.games++;
+    s.scoreSum += perfScore(p, g);
+  }));
+  const monthRanked = Object.entries(monthPerf)
+    .filter(([, v]) => v.games >= 3)
+    .map(([n, v]) => [n, v.scoreSum / v.games, v.games])
+    .sort((a, b) => b[1] - a[1]);
+  const monthMvp = monthRanked[0];
+  const monthNoob = monthRanked[monthRanked.length - 1];
+
+  // winrate selon la durée de la game
+  const toMin = (d) => { const [m, s] = d.split(":").map(Number); return m + (s || 0) / 60; };
+  const durBuckets = [
+    { label: "Express (< 25 min)", sub: "Stomp ou FF15", test: (m) => m < 25, games: 0, wins: 0 },
+    { label: "Normale (25-35 min)", sub: "Une game de gens civilisés", test: (m) => m >= 25 && m < 35, games: 0, wins: 0 },
+    { label: "Marathon (35+ min)", sub: "Personne ne sait finir", test: (m) => m >= 35, games: 0, wins: 0 },
+  ];
+  STATE.games.forEach((g) => {
+    const b = durBuckets.find((x) => x.test(toMin(g.duration)));
+    if (b) { b.games++; if (g.victory) b.wins++; }
+  });
+
   const champCount = {};
   STATE.games.forEach((g) => g.players.forEach((p) => { champCount[p.champion] = (champCount[p.champion] || 0) + 1; }));
   const topChamps = Object.entries(champCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
@@ -825,6 +886,23 @@ function renderStats() {
         <div class="big-stat"><div class="value">${fmt(totalDeaths)}</div><div class="label">Morts cumulées</div><div class="sub">Repose en paix x${totalDeaths}</div></div>
         <div class="big-stat"><div class="value">${topChamps[0] ? topChamps[0][0] : "—"}</div><div class="label">Champion le plus pick</div><div class="sub">${topChamps[0] ? topChamps[0][1] + " picks" : ""}</div></div>
         <div class="big-stat"><div class="value">${streakIcon} ${streakNow}</div><div class="label">Série en cours</div><div class="sub">records : ${recordW} wins / ${recordL} loses d'affilée</div></div>
+      </div>
+    </div>
+
+    ${monthMvp ? `
+    <div class="stats-section">
+      <h3>Le palmarès de ${monthLabel}</h3>
+      <div class="big-stats">
+        <div class="big-stat"><div class="value">👑 ${monthMvp[0]}</div><div class="label">MVP du mois</div><div class="sub">${monthMvp[1].toFixed(1)}/10 de moyenne sur ${monthMvp[2]} games</div></div>
+        <div class="big-stat"><div class="value">🤡 ${monthNoob[0]}</div><div class="label">Boulet du mois</div><div class="sub">${monthNoob[1].toFixed(1)}/10 de moyenne sur ${monthNoob[2]} games. Courage.</div></div>
+      </div>
+    </div>` : ""}
+
+    <div class="stats-section">
+      <h3>Est-ce qu'on sait finir une game ?</h3>
+      <div class="big-stats">
+        ${durBuckets.filter((b) => b.games).map((b) => `
+          <div class="big-stat"><div class="value">${Math.round((b.wins / b.games) * 100)}%</div><div class="label">${b.label}</div><div class="sub">${b.wins}W - ${b.games - b.wins}L · ${b.sub}</div></div>`).join("")}
       </div>
     </div>
 
