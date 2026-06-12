@@ -367,9 +367,12 @@ tr.row-noob td:first-child { box-shadow: inset 3px 0 0 var(--loss); }
 
 .role-boards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
   gap: 14px;
 }
+.role-board { overflow-x: auto; }
+.role-board td, .role-board th { white-space: nowrap; }
+.role-board td:nth-child(2) { width: 100%; }
 .role-board h4 {
   font-size: 0.8rem;
   text-transform: uppercase;
