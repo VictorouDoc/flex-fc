@@ -365,6 +365,12 @@ tr.row-noob td:first-child { box-shadow: inset 3px 0 0 var(--loss); }
   overflow: hidden;
 }
 
+.month-chart { padding: 16px; }
+.month-row { display: flex; align-items: center; gap: 12px; padding: 5px 0; }
+.month-label { width: 130px; flex-shrink: 0; color: var(--text-dim); font-size: 0.8rem; text-transform: capitalize; }
+.month-bar { flex: 1; }
+.month-count { width: 160px; flex-shrink: 0; font-size: 0.78rem; color: var(--text-dim); text-align: right; }
+
 .role-boards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));

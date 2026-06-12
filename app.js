@@ -417,6 +417,26 @@ function renderProfileDetail(name) {
   const quip = LORE[name] || QUIPS[idx % QUIPS.length];
 
   const games = STATE.games.filter((g) => g.players.some((p) => p.name === name)).reverse();
+
+  // winrate par champion
+  const champStats = {};
+  games.forEach((g) => {
+    const p = g.players.find((x) => x.name === name);
+    champStats[p.champion] = champStats[p.champion] || { games: 0, wins: 0 };
+    champStats[p.champion].games++;
+    if (g.victory) champStats[p.champion].wins++;
+  });
+  const champRows = Object.entries(champStats)
+    .sort((a, b) => b[1].games - a[1].games)
+    .slice(0, 5)
+    .map(([c, v]) => `
+      <tr>
+        <td>${c}</td>
+        <td class="mono">${v.games}</td>
+        <td class="mono">${v.wins}W - ${v.games - v.wins}L</td>
+        <td class="mono">${Math.round((v.wins / v.games) * 100)}%</td>
+      </tr>`).join("");
+
   const rows = games.map((g) => {
     const p = g.players.find((x) => x.name === name);
     const { mvp, noob } = mvpAndNoob(g);
@@ -443,6 +463,7 @@ function renderProfileDetail(name) {
       <div class="stat-box"><b>${s.mainChamp ? s.mainChamp[0] : "—"}</b><span>Champion fétiche</span></div>
       <div class="stat-box"><b>${(s.kills / s.games).toFixed(1)}</b><span>Kills / game</span></div>
       <div class="stat-box"><b>${(s.deaths / s.games).toFixed(1)}</b><span>Morts / game</span></div>
+      <div class="stat-box"><b>${s.avgScore.toFixed(1)}</b><span>Note moyenne /10</span></div>
     </div>` : `<p class="page-sub" style="margin-top:16px">Aucune game enregistrée. Soit il dodge, soit il dort.</p>`;
 
   el.innerHTML = `
@@ -454,11 +475,23 @@ function renderProfileDetail(name) {
         ${statBoxes}
       </div>
       ${s.games ? `
-      <div class="table-card">
-        <table>
-          <thead><tr><th>W/L</th><th>Champion</th><th>Rôle</th><th>K / D / A</th><th>KDA</th><th>Dégâts</th><th>Date</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
+      <div class="stats-section" style="margin-top:24px">
+        <h3>Ses champions</h3>
+        <div class="table-card">
+          <table>
+            <thead><tr><th>Champion</th><th>Games</th><th>Bilan</th><th>Winrate</th></tr></thead>
+            <tbody>${champRows}</tbody>
+          </table>
+        </div>
+      </div>
+      <div class="stats-section">
+        <h3>Toutes ses games</h3>
+        <div class="table-card">
+          <table>
+            <thead><tr><th>W/L</th><th>Champion</th><th>Rôle</th><th>K / D / A</th><th>KDA</th><th>Dégâts</th><th>Date</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
       </div>` : ""}
     </div>`;
 
@@ -554,6 +587,18 @@ function renderRoast() {
   const greffier = byPool((s) => s.assists / s.games);
   const pilier = byPool((s) => s.games);
 
+  // séries personnelles de wins/loses (games triées par date)
+  const streaks = {};
+  STATE.games.forEach((g) => g.players.forEach((p) => {
+    const s = streaks[p.name] = streaks[p.name] || { w: 0, l: 0, maxW: 0, maxL: 0 };
+    if (g.victory) { s.w++; s.l = 0; } else { s.l++; s.w = 0; }
+    s.maxW = Math.max(s.maxW, s.w);
+    s.maxL = Math.max(s.maxL, s.l);
+  }));
+  const streakList = Object.entries(streaks).filter(([n]) => (STATS[n] || {}).games >= MIN_G);
+  const loco = [...streakList].sort((a, b) => b[1].maxW - a[1].maxW)[0];
+  const spiral = [...streakList].sort((a, b) => b[1].maxL - a[1].maxL)[0];
+
   // la soirée noire : la date avec le plus de défaites
   const byDate = {};
   STATE.games.forEach((g) => {
@@ -610,6 +655,12 @@ function renderRoast() {
       detail: `${(greffier.assists / greffier.games).toFixed(1)} assists par game. Il ne tue personne, mais il signe tous les procès-verbaux.` },
     { cls: "gold",  emoji: "🍻", title: "Le pilier de comptoir", who: pilier.name,
       detail: `Présent dans ${Math.round((pilier.games / STATE.games.length) * 100)}% des games. Le serveur Discord, c'est chez lui maintenant.` },
+    ...(loco ? [
+      { cls: "gold",  emoji: "🚂", title: "La locomotive", who: loco[0],
+        detail: `${loco[1].maxW} victoires d'affilée, sa meilleure série. Pendant quelques jours, il a cru qu'il était bon.` },
+      { cls: "shame", emoji: "🌀", title: "La spirale infernale", who: spiral[0],
+        detail: `${spiral[1].maxL} défaites d'affilée, son record. À ce niveau-là c'est plus de la malchance, c'est un mode de vie.` },
+    ] : []),
     ...(rollercoaster ? [
       { cls: "shame", emoji: "🎢", title: "Les montagnes russes", who: rollercoaster[0],
         detail: `Écart-type de ${rollercoaster[1].toFixed(1)} sur ses notes. Capable du meilleur comme du pire, souvent dans la même soirée.` },
@@ -658,6 +709,33 @@ function renderStats() {
   const totalWins = STATE.games.filter((g) => g.victory).length;
   const totalKills = ACTIVE.reduce((s, p) => s + p.kills, 0);
   const totalDeaths = ACTIVE.reduce((s, p) => s + p.deaths, 0);
+
+  // séries de wins/loses (games triées par date)
+  let runW = 0, runL = 0, recordW = 0, recordL = 0;
+  STATE.games.forEach((g) => {
+    if (g.victory) { runW++; runL = 0; } else { runL++; runW = 0; }
+    recordW = Math.max(recordW, runW);
+    recordL = Math.max(recordL, runL);
+  });
+  const streakNow = runW > 0 ? `W${runW}` : `L${runL}`;
+  const streakIcon = runW > 0 ? "🔥" : "💀";
+
+  // activité par mois
+  const byMonth = {};
+  STATE.games.forEach((g) => {
+    const m = g.date.slice(0, 7);
+    byMonth[m] = byMonth[m] || { games: 0, wins: 0 };
+    byMonth[m].games++;
+    if (g.victory) byMonth[m].wins++;
+  });
+  const months = Object.entries(byMonth).sort((a, b) => a[0].localeCompare(b[0]));
+  const maxMonth = Math.max(...months.map(([, v]) => v.games), 1);
+  const monthRows = months.map(([m, v]) => `
+    <div class="month-row">
+      <div class="month-label">${new Date(m + "-01").toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}</div>
+      <div class="bar-wrap month-bar"><div class="bar" style="width:${(v.games / maxMonth) * 100}%"></div></div>
+      <div class="mono month-count">${v.games} games · ${Math.round((v.wins / v.games) * 100)}% WR</div>
+    </div>`).join("");
 
   const champCount = {};
   STATE.games.forEach((g) => g.players.forEach((p) => { champCount[p.champion] = (champCount[p.champion] || 0) + 1; }));
@@ -746,7 +824,13 @@ function renderStats() {
         <div class="big-stat"><div class="value">${fmt(totalKills)}</div><div class="label">Kills cumulés</div></div>
         <div class="big-stat"><div class="value">${fmt(totalDeaths)}</div><div class="label">Morts cumulées</div><div class="sub">Repose en paix x${totalDeaths}</div></div>
         <div class="big-stat"><div class="value">${topChamps[0] ? topChamps[0][0] : "—"}</div><div class="label">Champion le plus pick</div><div class="sub">${topChamps[0] ? topChamps[0][1] + " picks" : ""}</div></div>
+        <div class="big-stat"><div class="value">${streakIcon} ${streakNow}</div><div class="label">Série en cours</div><div class="sub">records : ${recordW} wins / ${recordL} loses d'affilée</div></div>
       </div>
+    </div>
+
+    <div class="stats-section">
+      <h3>Activité par mois</h3>
+      <div class="table-card month-chart">${monthRows}</div>
     </div>
 
     <div class="stats-section">
