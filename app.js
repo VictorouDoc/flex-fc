@@ -638,6 +638,48 @@ function renderStats() {
         <td class="mono">${Math.round((v.wins / v.games) * 100)}%</td>
       </tr>`).join("");
 
+  // leaderboard par rôle : qui est le meilleur à son poste, peu importe la line-up
+  const ROLE_LABELS = [["TOP", "🗡️ Top"], ["JGL", "🌲 Jungle"], ["MID", "✨ Mid"], ["ADC", "🏹 ADC"], ["SUP", "🛡️ Support"]];
+  const byRole = {};
+  STATE.games.forEach((g) => g.players.forEach((p) => {
+    if (!STATS[p.name]) return;
+    if (!byRole[p.role]) byRole[p.role] = {};
+    const s = byRole[p.role][p.name] || (byRole[p.role][p.name] = { name: p.name, games: 0, wins: 0, kills: 0, deaths: 0, assists: 0, scoreSum: 0 });
+    s.games++;
+    if (g.victory) s.wins++;
+    s.kills += p.kills; s.deaths += p.deaths; s.assists += p.assists;
+    s.scoreSum += perfScore(p, g);
+  }));
+  const roleBoards = ROLE_LABELS.map(([role, label]) => {
+    const rows = Object.values(byRole[role] || {})
+      .map((s) => ({
+        ...s,
+        winrate: Math.round((s.wins / s.games) * 100),
+        kda: s.deaths === 0 ? s.kills + s.assists : (s.kills + s.assists) / s.deaths,
+        avg: s.scoreSum / s.games,
+      }))
+      .sort((a, b) => b.avg - a.avg || b.games - a.games);
+    if (!rows.length) return "";
+    return `
+      <div class="table-card role-board">
+        <h4>${label}</h4>
+        <table>
+          <thead><tr><th>#</th><th>Joueur</th><th>Games</th><th>Winrate</th><th>KDA</th><th>Note</th></tr></thead>
+          <tbody>
+            ${rows.map((s, i) => `
+              <tr>
+                <td class="dim mono">${i === 0 && s.games >= 3 ? "👑" : i + 1}</td>
+                <td class="player-cell" data-player="${s.name}">${s.name}</td>
+                <td class="mono">${s.games}</td>
+                <td class="mono">${s.winrate}%</td>
+                <td class="mono">${s.kda.toFixed(2)}</td>
+                <td class="mono">${s.avg.toFixed(1)}</td>
+              </tr>`).join("")}
+          </tbody>
+        </table>
+      </div>`;
+  }).join("");
+
   const ranking = [...ACTIVE].sort((a, b) => b.avgScore - a.avgScore);
   const maxScore = Math.max(...ranking.map((s) => s.avgScore), 1);
   const rankRows = ranking.map((s, i) => `
@@ -674,6 +716,12 @@ function renderStats() {
           <tbody>${rankRows}</tbody>
         </table>
       </div>
+    </div>
+
+    <div class="stats-section">
+      <h3>Leaderboard par rôle</h3>
+      <p class="page-sub">Qui mérite vraiment son poste, toutes line-ups confondues. 👑 = patron du rôle (3 games min).</p>
+      <div class="role-boards">${roleBoards}</div>
     </div>
 
     <div class="stats-section">

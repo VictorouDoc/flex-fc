@@ -365,6 +365,19 @@ tr.row-noob td:first-child { box-shadow: inset 3px 0 0 var(--loss); }
   overflow: hidden;
 }
 
+.role-boards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 14px;
+}
+.role-board h4 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  padding: 14px 16px 0;
+}
+
 .bar-wrap { background: var(--bg-soft); border-radius: 6px; height: 8px; overflow: hidden; min-width: 80px; }
 .bar { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold)); border-radius: 6px; }
 
