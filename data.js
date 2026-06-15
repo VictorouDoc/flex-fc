@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 14/06/2026 08:06:37
-//  79 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 15/06/2026 09:50:15
+//  81 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -5205,6 +5205,136 @@ const GAMES = [
         "cs": 41,
         "damage": 19336,
         "vision": 154
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7887811790",
+    "date": "2026-06-14",
+    "victory": false,
+    "duration": "29:41",
+    "teamKills": 30,
+    "teamDamage": 103142,
+    "players": [
+      {
+        "name": "Cedex",
+        "role": "TOP",
+        "champion": "Malphite",
+        "kills": 2,
+        "deaths": 6,
+        "assists": 9,
+        "cs": 162,
+        "damage": 18705,
+        "vision": 18
+      },
+      {
+        "name": "Thanus",
+        "role": "JGL",
+        "champion": "MasterYi",
+        "kills": 11,
+        "deaths": 8,
+        "assists": 11,
+        "cs": 185,
+        "damage": 25443,
+        "vision": 27
+      },
+      {
+        "name": "Kanye West",
+        "role": "MID",
+        "champion": "Veigar",
+        "kills": 7,
+        "deaths": 5,
+        "assists": 12,
+        "cs": 211,
+        "damage": 29866,
+        "vision": 21
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "ADC",
+        "champion": "Kalista",
+        "kills": 9,
+        "deaths": 9,
+        "assists": 5,
+        "cs": 209,
+        "damage": 20344,
+        "vision": 21
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "SUP",
+        "champion": "Blitzcrank",
+        "kills": 1,
+        "deaths": 7,
+        "assists": 16,
+        "cs": 22,
+        "damage": 8784,
+        "vision": 66
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7887747267",
+    "date": "2026-06-14",
+    "victory": true,
+    "duration": "39:58",
+    "teamKills": 39,
+    "teamDamage": 182426,
+    "players": [
+      {
+        "name": "Kanye West",
+        "role": "TOP",
+        "champion": "DrMundo",
+        "kills": 9,
+        "deaths": 4,
+        "assists": 10,
+        "cs": 368,
+        "damage": 58441,
+        "vision": 33
+      },
+      {
+        "name": "Thanus",
+        "role": "JGL",
+        "champion": "Shaco",
+        "kills": 18,
+        "deaths": 4,
+        "assists": 11,
+        "cs": 249,
+        "damage": 51574,
+        "vision": 31
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "MID",
+        "champion": "Hwei",
+        "kills": 4,
+        "deaths": 6,
+        "assists": 11,
+        "cs": 344,
+        "damage": 37790,
+        "vision": 21
+      },
+      {
+        "name": "Cedex",
+        "role": "ADC",
+        "champion": "Tristana",
+        "kills": 8,
+        "deaths": 5,
+        "assists": 7,
+        "cs": 294,
+        "damage": 23739,
+        "vision": 21
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "SUP",
+        "champion": "Nautilus",
+        "kills": 0,
+        "deaths": 6,
+        "assists": 18,
+        "cs": 49,
+        "damage": 10882,
+        "vision": 82
       }
     ]
   }
