@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 16/06/2026 09:14:05
-//  84 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 17/06/2026 08:52:35
+//  86 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -5530,6 +5530,136 @@ const GAMES = [
         "cs": 45,
         "damage": 17727,
         "vision": 62
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7889920032",
+    "date": "2026-06-16",
+    "victory": false,
+    "duration": "27:38",
+    "teamKills": 23,
+    "teamDamage": 107529,
+    "players": [
+      {
+        "name": "Wiraak",
+        "role": "TOP",
+        "champion": "Illaoi",
+        "kills": 5,
+        "deaths": 7,
+        "assists": 4,
+        "cs": 199,
+        "damage": 23609,
+        "vision": 12
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "JGL",
+        "champion": "Amumu",
+        "kills": 7,
+        "deaths": 6,
+        "assists": 9,
+        "cs": 164,
+        "damage": 20438,
+        "vision": 14
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "MID",
+        "champion": "Galio",
+        "kills": 4,
+        "deaths": 5,
+        "assists": 9,
+        "cs": 188,
+        "damage": 29112,
+        "vision": 20
+      },
+      {
+        "name": "Kanye West",
+        "role": "ADC",
+        "champion": "Senna",
+        "kills": 5,
+        "deaths": 3,
+        "assists": 10,
+        "cs": 183,
+        "damage": 27577,
+        "vision": 19
+      },
+      {
+        "name": "LaDid",
+        "role": "SUP",
+        "champion": "Thresh",
+        "kills": 2,
+        "deaths": 7,
+        "assists": 8,
+        "cs": 31,
+        "damage": 6793,
+        "vision": 75
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7889889554",
+    "date": "2026-06-16",
+    "victory": true,
+    "duration": "24:14",
+    "teamKills": 34,
+    "teamDamage": 93842,
+    "players": [
+      {
+        "name": "Cedex",
+        "role": "TOP",
+        "champion": "Kayle",
+        "kills": 9,
+        "deaths": 4,
+        "assists": 2,
+        "cs": 198,
+        "damage": 20532,
+        "vision": 17
+      },
+      {
+        "name": "Wiraak",
+        "role": "JGL",
+        "champion": "Ivern",
+        "kills": 3,
+        "deaths": 2,
+        "assists": 16,
+        "cs": 134,
+        "damage": 7881,
+        "vision": 24
+      },
+      {
+        "name": "LaDid",
+        "role": "MID",
+        "champion": "Vex",
+        "kills": 7,
+        "deaths": 5,
+        "assists": 5,
+        "cs": 157,
+        "damage": 19370,
+        "vision": 17
+      },
+      {
+        "name": "Kanye West",
+        "role": "ADC",
+        "champion": "Caitlyn",
+        "kills": 11,
+        "deaths": 3,
+        "assists": 7,
+        "cs": 214,
+        "damage": 27117,
+        "vision": 19
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "SUP",
+        "champion": "Lux",
+        "kills": 4,
+        "deaths": 4,
+        "assists": 16,
+        "cs": 43,
+        "damage": 18942,
+        "vision": 55
       }
     ]
   }
