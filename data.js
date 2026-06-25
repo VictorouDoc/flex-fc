@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 24/06/2026 07:30:29
-//  93 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 25/06/2026 07:31:30
+//  96 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -6115,6 +6115,201 @@ const GAMES = [
         "cs": 45,
         "damage": 25394,
         "vision": 60
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7898367475",
+    "date": "2026-06-24",
+    "victory": false,
+    "duration": "32:16",
+    "teamKills": 33,
+    "teamDamage": 139202,
+    "players": [
+      {
+        "name": "Cedex",
+        "role": "TOP",
+        "champion": "Kled",
+        "kills": 10,
+        "deaths": 8,
+        "assists": 5,
+        "cs": 218,
+        "damage": 43709,
+        "vision": 23
+      },
+      {
+        "name": "Wiraak",
+        "role": "JGL",
+        "champion": "Shyvana",
+        "kills": 4,
+        "deaths": 6,
+        "assists": 10,
+        "cs": 208,
+        "damage": 21094,
+        "vision": 23
+      },
+      {
+        "name": "Kanye West",
+        "role": "MID",
+        "champion": "Locke",
+        "kills": 10,
+        "deaths": 7,
+        "assists": 3,
+        "cs": 215,
+        "damage": 26190,
+        "vision": 27
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "ADC",
+        "champion": "Ezreal",
+        "kills": 7,
+        "deaths": 6,
+        "assists": 9,
+        "cs": 247,
+        "damage": 34468,
+        "vision": 12
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "SUP",
+        "champion": "Seraphine",
+        "kills": 2,
+        "deaths": 8,
+        "assists": 15,
+        "cs": 29,
+        "damage": 13741,
+        "vision": 88
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7898313270",
+    "date": "2026-06-24",
+    "victory": true,
+    "duration": "27:44",
+    "teamKills": 40,
+    "teamDamage": 102487,
+    "players": [
+      {
+        "name": "Cedex",
+        "role": "TOP",
+        "champion": "Kled",
+        "kills": 10,
+        "deaths": 7,
+        "assists": 12,
+        "cs": 204,
+        "damage": 28288,
+        "vision": 18
+      },
+      {
+        "name": "Wiraak",
+        "role": "JGL",
+        "champion": "MonkeyKing",
+        "kills": 6,
+        "deaths": 4,
+        "assists": 9,
+        "cs": 163,
+        "damage": 12287,
+        "vision": 18
+      },
+      {
+        "name": "Kanye West",
+        "role": "MID",
+        "champion": "Ekko",
+        "kills": 11,
+        "deaths": 4,
+        "assists": 9,
+        "cs": 175,
+        "damage": 27708,
+        "vision": 18
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "ADC",
+        "champion": "MissFortune",
+        "kills": 13,
+        "deaths": 6,
+        "assists": 10,
+        "cs": 214,
+        "damage": 29108,
+        "vision": 15
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "SUP",
+        "champion": "Rakan",
+        "kills": 0,
+        "deaths": 11,
+        "assists": 16,
+        "cs": 18,
+        "damage": 5096,
+        "vision": 68
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7898247708",
+    "date": "2026-06-24",
+    "victory": false,
+    "duration": "35:54",
+    "teamKills": 35,
+    "teamDamage": 127919,
+    "players": [
+      {
+        "name": "Cedex",
+        "role": "TOP",
+        "champion": "Kayle",
+        "kills": 11,
+        "deaths": 8,
+        "assists": 9,
+        "cs": 287,
+        "damage": 41003,
+        "vision": 35
+      },
+      {
+        "name": "Wiraak",
+        "role": "JGL",
+        "champion": "Locke",
+        "kills": 5,
+        "deaths": 13,
+        "assists": 10,
+        "cs": 219,
+        "damage": 13617,
+        "vision": 23
+      },
+      {
+        "name": "Kanye West",
+        "role": "MID",
+        "champion": "Sylas",
+        "kills": 11,
+        "deaths": 8,
+        "assists": 7,
+        "cs": 181,
+        "damage": 34747,
+        "vision": 30
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "ADC",
+        "champion": "Jinx",
+        "kills": 7,
+        "deaths": 10,
+        "assists": 13,
+        "cs": 276,
+        "damage": 32142,
+        "vision": 20
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "SUP",
+        "champion": "Alistar",
+        "kills": 1,
+        "deaths": 11,
+        "assists": 22,
+        "cs": 31,
+        "damage": 6410,
+        "vision": 100
       }
     ]
   }
