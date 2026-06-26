@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 25/06/2026 07:31:30
-//  96 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 26/06/2026 07:40:32
+//  100 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -6310,6 +6310,266 @@ const GAMES = [
         "cs": 31,
         "damage": 6410,
         "vision": 100
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7899503774",
+    "date": "2026-06-25",
+    "victory": true,
+    "duration": "23:16",
+    "teamKills": 31,
+    "teamDamage": 90571,
+    "players": [
+      {
+        "name": "HANG NETANYAHU",
+        "role": "TOP",
+        "champion": "Garen",
+        "kills": 3,
+        "deaths": 1,
+        "assists": 6,
+        "cs": 230,
+        "damage": 20224,
+        "vision": 18
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "JGL",
+        "champion": "Udyr",
+        "kills": 2,
+        "deaths": 3,
+        "assists": 7,
+        "cs": 176,
+        "damage": 7333,
+        "vision": 21
+      },
+      {
+        "name": "Thanus",
+        "role": "MID",
+        "champion": "Xerath",
+        "kills": 16,
+        "deaths": 3,
+        "assists": 6,
+        "cs": 145,
+        "damage": 33666,
+        "vision": 11
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "ADC",
+        "champion": "Lucian",
+        "kills": 9,
+        "deaths": 4,
+        "assists": 3,
+        "cs": 155,
+        "damage": 14794,
+        "vision": 12
+      },
+      {
+        "name": "Miso",
+        "role": "SUP",
+        "champion": "Gragas",
+        "kills": 1,
+        "deaths": 3,
+        "assists": 12,
+        "cs": 40,
+        "damage": 14554,
+        "vision": 52
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7899451347",
+    "date": "2026-06-25",
+    "victory": true,
+    "duration": "29:31",
+    "teamKills": 39,
+    "teamDamage": 130487,
+    "players": [
+      {
+        "name": "Thanus",
+        "role": "TOP",
+        "champion": "Yone",
+        "kills": 12,
+        "deaths": 2,
+        "assists": 6,
+        "cs": 257,
+        "damage": 41631,
+        "vision": 28
+      },
+      {
+        "name": "HANG NETANYAHU",
+        "role": "JGL",
+        "champion": "JarvanIV",
+        "kills": 14,
+        "deaths": 7,
+        "assists": 11,
+        "cs": 209,
+        "damage": 33958,
+        "vision": 20
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "MID",
+        "champion": "Lissandra",
+        "kills": 6,
+        "deaths": 4,
+        "assists": 6,
+        "cs": 207,
+        "damage": 22716,
+        "vision": 21
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "ADC",
+        "champion": "Brand",
+        "kills": 6,
+        "deaths": 4,
+        "assists": 8,
+        "cs": 183,
+        "damage": 22573,
+        "vision": 20
+      },
+      {
+        "name": "Miso",
+        "role": "SUP",
+        "champion": "KSante",
+        "kills": 1,
+        "deaths": 7,
+        "assists": 19,
+        "cs": 42,
+        "damage": 9609,
+        "vision": 89
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7899405967",
+    "date": "2026-06-25",
+    "victory": false,
+    "duration": "29:09",
+    "teamKills": 37,
+    "teamDamage": 118630,
+    "players": [
+      {
+        "name": "Thanus",
+        "role": "TOP",
+        "champion": "Teemo",
+        "kills": 5,
+        "deaths": 8,
+        "assists": 6,
+        "cs": 185,
+        "damage": 21219,
+        "vision": 26
+      },
+      {
+        "name": "HANG NETANYAHU",
+        "role": "JGL",
+        "champion": "Karthus",
+        "kills": 11,
+        "deaths": 10,
+        "assists": 5,
+        "cs": 212,
+        "damage": 34997,
+        "vision": 23
+      },
+      {
+        "name": "Miso",
+        "role": "MID",
+        "champion": "Annie",
+        "kills": 10,
+        "deaths": 10,
+        "assists": 7,
+        "cs": 193,
+        "damage": 29180,
+        "vision": 11
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "ADC",
+        "champion": "Aphelios",
+        "kills": 5,
+        "deaths": 10,
+        "assists": 12,
+        "cs": 170,
+        "damage": 17478,
+        "vision": 13
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "SUP",
+        "champion": "Pantheon",
+        "kills": 6,
+        "deaths": 12,
+        "assists": 9,
+        "cs": 34,
+        "damage": 15756,
+        "vision": 73
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7899360644",
+    "date": "2026-06-25",
+    "victory": true,
+    "duration": "29:20",
+    "teamKills": 55,
+    "teamDamage": 124230,
+    "players": [
+      {
+        "name": "Thanus",
+        "role": "TOP",
+        "champion": "Singed",
+        "kills": 10,
+        "deaths": 3,
+        "assists": 20,
+        "cs": 142,
+        "damage": 23713,
+        "vision": 18
+      },
+      {
+        "name": "Miso",
+        "role": "JGL",
+        "champion": "JarvanIV",
+        "kills": 16,
+        "deaths": 5,
+        "assists": 24,
+        "cs": 194,
+        "damage": 26454,
+        "vision": 28
+      },
+      {
+        "name": "HANG NETANYAHU",
+        "role": "MID",
+        "champion": "Sylas",
+        "kills": 10,
+        "deaths": 6,
+        "assists": 15,
+        "cs": 161,
+        "damage": 28194,
+        "vision": 24
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "ADC",
+        "champion": "Xayah",
+        "kills": 19,
+        "deaths": 9,
+        "assists": 5,
+        "cs": 229,
+        "damage": 36836,
+        "vision": 19
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "SUP",
+        "champion": "Blitzcrank",
+        "kills": 0,
+        "deaths": 7,
+        "assists": 27,
+        "cs": 29,
+        "damage": 9033,
+        "vision": 71
       }
     ]
   }
