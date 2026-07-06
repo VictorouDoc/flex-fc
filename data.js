@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 05/07/2026 06:58:25
-//  100 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 06/07/2026 08:08:23
+//  102 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -6570,6 +6570,136 @@ const GAMES = [
         "cs": 29,
         "damage": 9033,
         "vision": 71
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7910040985",
+    "date": "2026-07-05",
+    "victory": true,
+    "duration": "32:48",
+    "teamKills": 41,
+    "teamDamage": 141233,
+    "players": [
+      {
+        "name": "Cedex",
+        "role": "TOP",
+        "champion": "DrMundo",
+        "kills": 12,
+        "deaths": 3,
+        "assists": 9,
+        "cs": 287,
+        "damage": 50174,
+        "vision": 21
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "JGL",
+        "champion": "Khazix",
+        "kills": 4,
+        "deaths": 7,
+        "assists": 11,
+        "cs": 230,
+        "damage": 18905,
+        "vision": 25
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "MID",
+        "champion": "Syndra",
+        "kills": 4,
+        "deaths": 9,
+        "assists": 7,
+        "cs": 224,
+        "damage": 19622,
+        "vision": 12
+      },
+      {
+        "name": "Lionel Messi",
+        "role": "ADC",
+        "champion": "Senna",
+        "kills": 10,
+        "deaths": 11,
+        "assists": 14,
+        "cs": 154,
+        "damage": 24366,
+        "vision": 14
+      },
+      {
+        "name": "Kanye West",
+        "role": "SUP",
+        "champion": "Bard",
+        "kills": 11,
+        "deaths": 6,
+        "assists": 20,
+        "cs": 34,
+        "damage": 28166,
+        "vision": 111
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7910011784",
+    "date": "2026-07-05",
+    "victory": false,
+    "duration": "21:43",
+    "teamKills": 19,
+    "teamDamage": 48402,
+    "players": [
+      {
+        "name": "Cedex",
+        "role": "TOP",
+        "champion": "Jax",
+        "kills": 8,
+        "deaths": 4,
+        "assists": 4,
+        "cs": 167,
+        "damage": 16097,
+        "vision": 20
+      },
+      {
+        "name": "Lionel Messi",
+        "role": "JGL",
+        "champion": "Quinn",
+        "kills": 4,
+        "deaths": 10,
+        "assists": 2,
+        "cs": 91,
+        "damage": 8862,
+        "vision": 19
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "MID",
+        "champion": "Kassadin",
+        "kills": 1,
+        "deaths": 8,
+        "assists": 3,
+        "cs": 140,
+        "damage": 9400,
+        "vision": 11
+      },
+      {
+        "name": "Kanye West",
+        "role": "ADC",
+        "champion": "Vayne",
+        "kills": 4,
+        "deaths": 5,
+        "assists": 2,
+        "cs": 157,
+        "damage": 6706,
+        "vision": 13
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "SUP",
+        "champion": "Zilean",
+        "kills": 2,
+        "deaths": 6,
+        "assists": 8,
+        "cs": 37,
+        "damage": 7337,
+        "vision": 31
       }
     ]
   }
