@@ -97,7 +97,6 @@ function buildGame(id, m, puuids) {
     players: team
       .sort((a, b) => ROLE_ORDER.indexOf(a.pt.teamPosition) - ROLE_ORDER.indexOf(b.pt.teamPosition))
       .map(({ pt, name }) => ({
-        puuid: pt.puuid,
         name,
         role: ROLE_MAP[pt.teamPosition] || "?",
         champion: pt.championName,

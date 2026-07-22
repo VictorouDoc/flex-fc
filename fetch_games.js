@@ -106,7 +106,6 @@ async function main() {
   console.log("1/3 Résolution des comptes...");
   const cache = loadPuuidCache();
   const puuidToName = {};
-  const personPuuids = {}; // personne -> [puuids] (main + smurfs + anciens comptes)
   for (const p of ACCOUNTS) {
     const person = canon(p.name);
     const key = `${p.name}${p.tag}`;
@@ -125,15 +124,12 @@ async function main() {
       continue;
     }
     puuidToName[puuid] = person;
-    (personPuuids[person] = personPuuids[person] || []).push(puuid);
   }
   savePuuidCache(cache);
 
-  // roster affiché : une entrée par personne, avec tous ses puuids
-  const PLAYERS = ACCOUNTS.filter((a) => !a.as).map(({ name, tag }) => ({
-    name, tag, puuids: personPuuids[name] || [],
-  }));
-  const primaryPuuidOf = (name) => (personPuuids[canon(name)] || [])[0];
+  // roster affiché sur le site : une entrée par personne (pas de puuid : data.js
+  // est public, on ne veut aucun identifiant Riot dedans)
+  const PLAYERS = ACCOUNTS.filter((a) => !a.as).map(({ name, tag }) => ({ name, tag }));
 
   // 2) Matchlists flex + comptage des recoupements
   console.log("2/3 Récupération des historiques Flex...");
@@ -147,10 +143,7 @@ async function main() {
 
   const existing = loadExistingGames().map((g) => ({
     ...g,
-    players: g.players.map((p) => {
-      const name = canon(p.name);
-      return { ...p, name, puuid: p.puuid || primaryPuuidOf(name) };
-    }),
+    players: g.players.map((p) => ({ ...p, name: canon(p.name) })),
   }));
   const knownIds = new Set(existing.map((g) => g.id));
   const candidates = Object.entries(matchCount)
@@ -186,7 +179,6 @@ async function main() {
       players: team
         .sort((a, b) => Object.keys(ROLE_MAP).indexOf(a.pt.teamPosition) - Object.keys(ROLE_MAP).indexOf(b.pt.teamPosition))
         .map(({ pt, name }) => ({
-          puuid: pt.puuid,
           name,
           role: ROLE_MAP[pt.teamPosition] || "?",
           champion: pt.championName,

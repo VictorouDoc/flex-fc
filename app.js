@@ -7,26 +7,8 @@
 // Tant que c'est vide, la zone commentaires affiche un message d'attente.
 const COMMENTS_API = "https://flex-comments.champagne-victor28000-6a2.workers.dev";
 
-// ---------- identité par PUUID ----------
-// Chaque personne du roster peut avoir plusieurs comptes (mains, smurfs,
-// anciens pseudos après un rename), listés dans p.puuids. On agrège par
-// PUUID quand il est connu, sinon on retombe sur le pseudo stocké dans la
-// game (legacy sans puuid). Résultat : un rename ne coupe plus personne.
-function personIndex(players) {
-  const idx = {};
-  (players || []).forEach((p) => (p.puuids || []).forEach((u) => { idx[u] = p.name; }));
-  return idx;
-}
-function normalizeGames(games, players) {
-  const idx = personIndex(players);
-  return (games || []).map((g) => ({
-    ...g,
-    players: g.players.map((p) => ({ ...p, name: (p.puuid && idx[p.puuid]) || p.name })),
-  }));
-}
-
 // ---------- état (rechargeable via le bouton ⟳) ----------
-let STATE = { players: PLAYERS, games: normalizeGames(GAMES, PLAYERS), gamesOrder: "desc" };
+let STATE = { players: PLAYERS, games: GAMES, gamesOrder: "desc" };
 let STATS = {};
 let ACTIVE = [];
 
@@ -222,7 +204,7 @@ async function reloadData() {
       games = mergeGames(games, live);
     }
 
-    STATE = { ...STATE, players: data.PLAYERS, games: normalizeGames(games, data.PLAYERS) };
+    STATE = { ...STATE, players: data.PLAYERS, games };
     recompute();
     renderAll();
     const diff = games.length - before;
