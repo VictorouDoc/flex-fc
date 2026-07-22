@@ -21,7 +21,6 @@ const ROSTER = [
   { name: "SeanII TK",      tag: "EUW"   },
   { name: "CL Sky",         tag: "EUW"   },
   { name: "ThanosDZ",       tag: "EUW"   },
-  { name: "HANG NETANYAHU", tag: "pls"   },
   { name: "DocLaFolle",     tag: "LeSaf" },
   { name: "Miso",           tag: "RAT"   },
   { name: "Ξnjin",          tag: "PEAK"  },
@@ -32,6 +31,10 @@ const ROSTER = [
   { name: "LaDid",          tag: "LaDid" },
   { name: "Wiraak",         tag: "EUW"   },
   { name: "Phaeldque",      tag: "EUW", as: "Thanus" }, // smurf de Thanus
+
+  // renames / autres comptes de Kanye West -> tout crédité à "Kanye West"
+  { name: "HANG NETANYAHU",   tag: "pls",   as: "Kanye West" },
+  { name: "on some real shi", tag: "frmyN", as: "Kanye West" },
 ];
 const MIN_ROSTER = 5;
 const COOLDOWN_MS = 2 * 60 * 1000;
@@ -62,14 +65,14 @@ async function riot(path, env) {
 
 // puuids du roster, résolus une fois puis gardés en KV
 async function getPuuids(env) {
-  let map = await env.COMMENTS.get("puuids_v3", "json");
+  let map = await env.COMMENTS.get("puuids_v4", "json");
   if (map && Object.keys(map).length >= ROSTER.length) return map;
   map = {};
   for (const p of ROSTER) {
     const acc = await riot(`/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(p.name)}/${encodeURIComponent(p.tag)}`, env);
-    if (acc) map[acc.puuid] = p.as || p.name; // les smurfs sont crédités à leur propriétaire
+    if (acc) map[acc.puuid] = p.as || p.name; // smurfs/renames crédités à leur propriétaire
   }
-  await env.COMMENTS.put("puuids_v3", JSON.stringify(map));
+  await env.COMMENTS.put("puuids_v4", JSON.stringify(map));
   return map;
 }
 
@@ -94,6 +97,7 @@ function buildGame(id, m, puuids) {
     players: team
       .sort((a, b) => ROLE_ORDER.indexOf(a.pt.teamPosition) - ROLE_ORDER.indexOf(b.pt.teamPosition))
       .map(({ pt, name }) => ({
+        puuid: pt.puuid,
         name,
         role: ROLE_MAP[pt.teamPosition] || "?",
         champion: pt.championName,

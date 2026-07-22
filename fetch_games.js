@@ -31,7 +31,6 @@ const ACCOUNTS = [
   { name: "SeanII TK",      tag: "#EUW"   },
   { name: "CL Sky",         tag: "#EUW"   },
   { name: "ThanosDZ",       tag: "#EUW"   },
-  { name: "HANG NETANYAHU", tag: "#pls"   },
   { name: "DocLaFolle",     tag: "#LeSaf" },
   { name: "Miso",           tag: "#RAT"   },
   { name: "Ξnjin",          tag: "#PEAK"  },
@@ -42,14 +41,27 @@ const ACCOUNTS = [
   { name: "LaDid",          tag: "#LaDid" },
   { name: "Wiraak",         tag: "#EUW"   },
   { name: "Phaeldque",      tag: "#EUW", as: "Thanus" }, // smurf de Thanus
-];
 
-// roster affiché sur le site : une entrée par personne
-const PLAYERS = ACCOUNTS.filter((a) => !a.as).map(({ name, tag }) => ({ name, tag }));
+  // renames / autres comptes de Kanye West -> tout recrédité à "Kanye West"
+  { name: "HANG NETANYAHU",    tag: "#pls",   as: "Kanye West" },
+  { name: "on some real shi",  tag: "#frmyN", as: "Kanye West" },
+];
 
 // renomme les smurfs dans les games (y compris l'historique déjà en data.js)
 const ALIAS = Object.fromEntries(ACCOUNTS.filter((a) => a.as).map((a) => [a.name, a.as]));
 const canon = (name) => ALIAS[name] || name;
+
+// Cache des PUUID (identifiant Riot stable, ne change JAMAIS même après un
+// rename). On le persiste pour pouvoir recréditer un compte renommé sans même
+// connaître son ancien pseudo : si l'API renvoie 404 (compte renommé et config
+// pas encore à jour), on réutilise le puuid déjà connu.
+const PUUID_CACHE_FILE = "puuids.json";
+function loadPuuidCache() {
+  try { return JSON.parse(fs.readFileSync(PUUID_CACHE_FILE, "utf8")); } catch { return {}; }
+}
+function savePuuidCache(cache) {
+  fs.writeFileSync(PUUID_CACHE_FILE, JSON.stringify(cache, null, 2), "utf8");
+}
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -90,16 +102,38 @@ function loadExistingGames() {
 }
 
 async function main() {
-  // 1) Riot ID -> PUUID
+  // 1) Riot ID -> PUUID (avec cache : robuste aux renames)
   console.log("1/3 Résolution des comptes...");
+  const cache = loadPuuidCache();
   const puuidToName = {};
+  const personPuuids = {}; // personne -> [puuids] (main + smurfs + anciens comptes)
   for (const p of ACCOUNTS) {
+    const person = canon(p.name);
+    const key = `${p.name}${p.tag}`;
     const tag = p.tag.replace("#", "");
     const acc = await riot(`/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(p.name)}/${encodeURIComponent(tag)}`);
-    if (!acc) { console.log(`  ✗ ${p.name} ${p.tag} introuvable`); continue; }
-    puuidToName[acc.puuid] = canon(p.name);
-    console.log(`  ✓ ${p.name} ${p.tag}`);
+    let puuid;
+    if (acc) {
+      puuid = acc.puuid;
+      cache[key] = puuid;
+      console.log(`  ✓ ${p.name} ${p.tag}`);
+    } else if (cache[key]) {
+      puuid = cache[key];
+      console.log(`  ⚠ ${p.name} ${p.tag} introuvable (renommé ?) — puuid en cache réutilisé`);
+    } else {
+      console.log(`  ✗ ${p.name} ${p.tag} introuvable`);
+      continue;
+    }
+    puuidToName[puuid] = person;
+    (personPuuids[person] = personPuuids[person] || []).push(puuid);
   }
+  savePuuidCache(cache);
+
+  // roster affiché : une entrée par personne, avec tous ses puuids
+  const PLAYERS = ACCOUNTS.filter((a) => !a.as).map(({ name, tag }) => ({
+    name, tag, puuids: personPuuids[name] || [],
+  }));
+  const primaryPuuidOf = (name) => (personPuuids[canon(name)] || [])[0];
 
   // 2) Matchlists flex + comptage des recoupements
   console.log("2/3 Récupération des historiques Flex...");
@@ -113,7 +147,10 @@ async function main() {
 
   const existing = loadExistingGames().map((g) => ({
     ...g,
-    players: g.players.map((p) => ({ ...p, name: canon(p.name) })),
+    players: g.players.map((p) => {
+      const name = canon(p.name);
+      return { ...p, name, puuid: p.puuid || primaryPuuidOf(name) };
+    }),
   }));
   const knownIds = new Set(existing.map((g) => g.id));
   const candidates = Object.entries(matchCount)
@@ -149,6 +186,7 @@ async function main() {
       players: team
         .sort((a, b) => Object.keys(ROLE_MAP).indexOf(a.pt.teamPosition) - Object.keys(ROLE_MAP).indexOf(b.pt.teamPosition))
         .map(({ pt, name }) => ({
+          puuid: pt.puuid,
           name,
           role: ROLE_MAP[pt.teamPosition] || "?",
           champion: pt.championName,

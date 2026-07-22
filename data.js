@@ -1,6 +1,6 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 22/07/2026 06:19:18
+//  le 22/07/2026 17:22:44
 //  104 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
@@ -29,10 +29,6 @@ const PLAYERS = [
   {
     "name": "ThanosDZ",
     "tag": "#EUW"
-  },
-  {
-    "name": "HANG NETANYAHU",
-    "tag": "#pls"
   },
   {
     "name": "DocLaFolle",
@@ -342,7 +338,7 @@ const GAMES = [
     "teamDamage": 83960,
     "players": [
       {
-        "name": "HANG NETANYAHU",
+        "name": "Kanye West",
         "role": "TOP",
         "champion": "Naafiri",
         "kills": 2,
@@ -516,7 +512,7 @@ const GAMES = [
         "vision": 24
       },
       {
-        "name": "HANG NETANYAHU",
+        "name": "Kanye West",
         "role": "SUP",
         "champion": "Sona",
         "kills": 1,
@@ -2043,7 +2039,7 @@ const GAMES = [
         "vision": 15
       },
       {
-        "name": "HANG NETANYAHU",
+        "name": "Kanye West",
         "role": "JGL",
         "champion": "Graves",
         "kills": 8,
@@ -2119,7 +2115,7 @@ const GAMES = [
         "vision": 22
       },
       {
-        "name": "HANG NETANYAHU",
+        "name": "Kanye West",
         "role": "MID",
         "champion": "TwistedFate",
         "kills": 2,
@@ -6322,7 +6318,7 @@ const GAMES = [
     "teamDamage": 90571,
     "players": [
       {
-        "name": "HANG NETANYAHU",
+        "name": "Kanye West",
         "role": "TOP",
         "champion": "Garen",
         "kills": 3,
@@ -6398,7 +6394,7 @@ const GAMES = [
         "vision": 28
       },
       {
-        "name": "HANG NETANYAHU",
+        "name": "Kanye West",
         "role": "JGL",
         "champion": "JarvanIV",
         "kills": 14,
@@ -6463,7 +6459,7 @@ const GAMES = [
         "vision": 26
       },
       {
-        "name": "HANG NETANYAHU",
+        "name": "Kanye West",
         "role": "JGL",
         "champion": "Karthus",
         "kills": 11,
@@ -6539,7 +6535,7 @@ const GAMES = [
         "vision": 28
       },
       {
-        "name": "HANG NETANYAHU",
+        "name": "Kanye West",
         "role": "MID",
         "champion": "Sylas",
         "kills": 10,
