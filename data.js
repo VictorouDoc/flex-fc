@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 22/07/2026 17:22:44
-//  104 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 23/07/2026 06:21:52
+//  107 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -6826,6 +6826,201 @@ const GAMES = [
         "cs": 42,
         "damage": 12437,
         "vision": 132
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7925722362",
+    "date": "2026-07-21",
+    "victory": true,
+    "duration": "39:09",
+    "teamKills": 47,
+    "teamDamage": 179190,
+    "players": [
+      {
+        "name": "ThanosDZ",
+        "role": "TOP",
+        "champion": "Mordekaiser",
+        "kills": 9,
+        "deaths": 5,
+        "assists": 0,
+        "cs": 311,
+        "damage": 33839,
+        "vision": 40
+      },
+      {
+        "name": "Kanye West",
+        "role": "JGL",
+        "champion": "Hecarim",
+        "kills": 24,
+        "deaths": 8,
+        "assists": 8,
+        "cs": 297,
+        "damage": 61116,
+        "vision": 34
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "MID",
+        "champion": "Orianna",
+        "kills": 6,
+        "deaths": 8,
+        "assists": 17,
+        "cs": 239,
+        "damage": 29509,
+        "vision": 42
+      },
+      {
+        "name": "Lionel Messi",
+        "role": "ADC",
+        "champion": "Seraphine",
+        "kills": 5,
+        "deaths": 8,
+        "assists": 21,
+        "cs": 223,
+        "damage": 30746,
+        "vision": 36
+      },
+      {
+        "name": "Miso",
+        "role": "SUP",
+        "champion": "Lux",
+        "kills": 3,
+        "deaths": 11,
+        "assists": 17,
+        "cs": 92,
+        "damage": 23980,
+        "vision": 92
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7925657143",
+    "date": "2026-07-21",
+    "victory": false,
+    "duration": "38:38",
+    "teamKills": 39,
+    "teamDamage": 190110,
+    "players": [
+      {
+        "name": "Jordan Carter",
+        "role": "TOP",
+        "champion": "Trundle",
+        "kills": 1,
+        "deaths": 9,
+        "assists": 5,
+        "cs": 327,
+        "damage": 35682,
+        "vision": 38
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "JGL",
+        "champion": "XinZhao",
+        "kills": 19,
+        "deaths": 8,
+        "assists": 9,
+        "cs": 242,
+        "damage": 53502,
+        "vision": 33
+      },
+      {
+        "name": "Kanye West",
+        "role": "MID",
+        "champion": "Sylas",
+        "kills": 9,
+        "deaths": 9,
+        "assists": 14,
+        "cs": 230,
+        "damage": 30055,
+        "vision": 42
+      },
+      {
+        "name": "Lionel Messi",
+        "role": "ADC",
+        "champion": "Seraphine",
+        "kills": 5,
+        "deaths": 13,
+        "assists": 14,
+        "cs": 179,
+        "damage": 25652,
+        "vision": 25
+      },
+      {
+        "name": "Miso",
+        "role": "SUP",
+        "champion": "Xerath",
+        "kills": 5,
+        "deaths": 9,
+        "assists": 18,
+        "cs": 108,
+        "damage": 45219,
+        "vision": 82
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7925600939",
+    "date": "2026-07-21",
+    "victory": true,
+    "duration": "34:44",
+    "teamKills": 53,
+    "teamDamage": 161808,
+    "players": [
+      {
+        "name": "ThanosDZ",
+        "role": "TOP",
+        "champion": "Malphite",
+        "kills": 14,
+        "deaths": 4,
+        "assists": 18,
+        "cs": 211,
+        "damage": 42326,
+        "vision": 25
+      },
+      {
+        "name": "Lionel Messi",
+        "role": "JGL",
+        "champion": "MasterYi",
+        "kills": 11,
+        "deaths": 10,
+        "assists": 8,
+        "cs": 234,
+        "damage": 27493,
+        "vision": 24
+      },
+      {
+        "name": "Miso",
+        "role": "MID",
+        "champion": "Hwei",
+        "kills": 14,
+        "deaths": 6,
+        "assists": 16,
+        "cs": 283,
+        "damage": 47919,
+        "vision": 18
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "ADC",
+        "champion": "Sylas",
+        "kills": 5,
+        "deaths": 10,
+        "assists": 18,
+        "cs": 185,
+        "damage": 18832,
+        "vision": 14
+      },
+      {
+        "name": "Kanye West",
+        "role": "SUP",
+        "champion": "Camille",
+        "kills": 9,
+        "deaths": 11,
+        "assists": 15,
+        "cs": 46,
+        "damage": 25238,
+        "vision": 112
       }
     ]
   }
