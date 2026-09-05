@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 04/09/2026 08:16:18
-//  107 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 05/09/2026 07:53:43
+//  109 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -7021,6 +7021,136 @@ const GAMES = [
         "cs": 46,
         "damage": 25238,
         "vision": 112
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7973498167",
+    "date": "2026-09-04",
+    "victory": false,
+    "duration": "30:44",
+    "teamKills": 58,
+    "teamDamage": 150650,
+    "players": [
+      {
+        "name": "Cedex",
+        "role": "TOP",
+        "champion": "Camille",
+        "kills": 4,
+        "deaths": 13,
+        "assists": 8,
+        "cs": 129,
+        "damage": 21227,
+        "vision": 19
+      },
+      {
+        "name": "Lionel Messi",
+        "role": "JGL",
+        "champion": "MasterYi",
+        "kills": 16,
+        "deaths": 10,
+        "assists": 11,
+        "cs": 154,
+        "damage": 28881,
+        "vision": 31
+      },
+      {
+        "name": "Kanye West",
+        "role": "MID",
+        "champion": "Vladimir",
+        "kills": 17,
+        "deaths": 6,
+        "assists": 12,
+        "cs": 198,
+        "damage": 47975,
+        "vision": 27
+      },
+      {
+        "name": "Miso",
+        "role": "ADC",
+        "champion": "Ziggs",
+        "kills": 20,
+        "deaths": 9,
+        "assists": 10,
+        "cs": 204,
+        "damage": 42470,
+        "vision": 17
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "SUP",
+        "champion": "Karma",
+        "kills": 1,
+        "deaths": 11,
+        "assists": 28,
+        "cs": 30,
+        "damage": 10097,
+        "vision": 85
+      }
+    ]
+  },
+  {
+    "id": "EUW1_7973476551",
+    "date": "2026-09-04",
+    "victory": true,
+    "duration": "29:18",
+    "teamKills": 27,
+    "teamDamage": 76809,
+    "players": [
+      {
+        "name": "Miso",
+        "role": "TOP",
+        "champion": "Renekton",
+        "kills": 15,
+        "deaths": 7,
+        "assists": 8,
+        "cs": 224,
+        "damage": 34893,
+        "vision": 19
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "JGL",
+        "champion": "Ekko",
+        "kills": 5,
+        "deaths": 9,
+        "assists": 7,
+        "cs": 202,
+        "damage": 13990,
+        "vision": 19
+      },
+      {
+        "name": "Cedex",
+        "role": "MID",
+        "champion": "Jhin",
+        "kills": 2,
+        "deaths": 5,
+        "assists": 6,
+        "cs": 198,
+        "damage": 11404,
+        "vision": 9
+      },
+      {
+        "name": "Lionel Messi",
+        "role": "ADC",
+        "champion": "Yasuo",
+        "kills": 2,
+        "deaths": 10,
+        "assists": 5,
+        "cs": 179,
+        "damage": 10423,
+        "vision": 18
+      },
+      {
+        "name": "Kanye West",
+        "role": "SUP",
+        "champion": "Blitzcrank",
+        "kills": 3,
+        "deaths": 8,
+        "assists": 9,
+        "cs": 20,
+        "damage": 6099,
+        "vision": 89
       }
     ]
   }
