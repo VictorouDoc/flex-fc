@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 18/10/2026 08:22:25
-//  121 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 19/10/2026 09:22:03
+//  122 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -7931,6 +7931,71 @@ const GAMES = [
         "cs": 53,
         "damage": 9999,
         "vision": 39
+      }
+    ]
+  },
+  {
+    "id": "EUW1_8017924076",
+    "date": "2026-10-18",
+    "victory": false,
+    "duration": "31:34",
+    "teamKills": 32,
+    "teamDamage": 94861,
+    "players": [
+      {
+        "name": "Kanye West",
+        "role": "TOP",
+        "champion": "Jax",
+        "kills": 5,
+        "deaths": 6,
+        "assists": 4,
+        "cs": 233,
+        "damage": 18012,
+        "vision": 28
+      },
+      {
+        "name": "Miso",
+        "role": "JGL",
+        "champion": "Nocturne",
+        "kills": 5,
+        "deaths": 5,
+        "assists": 10,
+        "cs": 196,
+        "damage": 15769,
+        "vision": 26
+      },
+      {
+        "name": "Wiraak",
+        "role": "MID",
+        "champion": "Xerath",
+        "kills": 5,
+        "deaths": 7,
+        "assists": 5,
+        "cs": 186,
+        "damage": 20510,
+        "vision": 5
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "ADC",
+        "champion": "MissFortune",
+        "kills": 15,
+        "deaths": 6,
+        "assists": 7,
+        "cs": 233,
+        "damage": 22249,
+        "vision": 22
+      },
+      {
+        "name": "Cedex",
+        "role": "SUP",
+        "champion": "JarvanIV",
+        "kills": 2,
+        "deaths": 15,
+        "assists": 13,
+        "cs": 28,
+        "damage": 18321,
+        "vision": 61
       }
     ]
   }
