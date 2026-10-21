@@ -1,6 +1,6 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 20/10/2026 08:56:50
+//  le 21/10/2026 08:56:02
 //  122 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
