@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 22/10/2026 08:58:13
-//  122 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 23/10/2026 08:53:23
+//  123 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -7996,6 +7996,71 @@ const GAMES = [
         "cs": 28,
         "damage": 18321,
         "vision": 61
+      }
+    ]
+  },
+  {
+    "id": "EUW1_8021983028",
+    "date": "2026-10-22",
+    "victory": true,
+    "duration": "26:31",
+    "teamKills": 45,
+    "teamDamage": 125346,
+    "players": [
+      {
+        "name": "Cedex",
+        "role": "TOP",
+        "champion": "Camille",
+        "kills": 5,
+        "deaths": 3,
+        "assists": 8,
+        "cs": 214,
+        "damage": 24061,
+        "vision": 16
+      },
+      {
+        "name": "Lionel Messi",
+        "role": "JGL",
+        "champion": "Qiyana",
+        "kills": 8,
+        "deaths": 2,
+        "assists": 11,
+        "cs": 183,
+        "damage": 19320,
+        "vision": 23
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "MID",
+        "champion": "Xerath",
+        "kills": 13,
+        "deaths": 4,
+        "assists": 9,
+        "cs": 210,
+        "damage": 35497,
+        "vision": 20
+      },
+      {
+        "name": "Kanye West",
+        "role": "ADC",
+        "champion": "Lucian",
+        "kills": 18,
+        "deaths": 3,
+        "assists": 10,
+        "cs": 207,
+        "damage": 39232,
+        "vision": 20
+      },
+      {
+        "name": "Wiraak",
+        "role": "SUP",
+        "champion": "Nautilus",
+        "kills": 1,
+        "deaths": 5,
+        "assists": 21,
+        "cs": 20,
+        "damage": 7236,
+        "vision": 45
       }
     ]
   }
