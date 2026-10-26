@@ -9,6 +9,7 @@ Le site qui récap nos flex League of Legends. Stats, MVP, boulets, roasting.
 | `index.html` / `style.css` / `app.js` | Le site (statique, aucune dépendance) |
 | `data.js` | Les games (généré automatiquement, ne pas éditer à la main) |
 | `fetch_games.js` | Script de mise à jour via l'API Riot |
+| `roster.json` | Le roster : une personne (son nom) → ses comptes Riot |
 
 ## Mettre à jour les games
 
@@ -23,32 +24,48 @@ Ensuite : `git add data.js`, `git commit`, `git push` → le site se met à jour
 ⚠️ La clé API ne doit JAMAIS être committée. Elle se passe en argument du script,
 elle n'apparaît dans aucun fichier du repo.
 
-## Comptes, smurfs et renames
+## Le roster : une personne = un nom, plusieurs comptes
 
-La liste `ACCOUNTS` (en haut de `fetch_games.js`, dupliquée dans `ROSTER` de
-`worker.js`) fait le lien pseudo → personne :
+Tout est dans `roster.json` (lu par `fetch_games.js` ET par `worker.js`) :
 
-- entrée normale → une personne affichée sur le site
-- entrée avec `as: "X"` → smurf, ancien pseudo ou 2ᵉ compte : **toutes ses games
-  sont créditées à X** (main + historique déjà en `data.js`, réécrit à chaque run)
+```json
+{ "name": "Kanye West", "accounts": ["Kanye West#JLOVE", "HANG NETANYAHU#pls"] }
+```
+
+- `name` — le **nom de la personne**, c'est lui qui est affiché sur le site et qui
+  porte les stats. Il ne dépend d'aucun pseudo.
+- `accounts` — tous ses comptes Riot (`Pseudo#TAG`) : main en premier (affiché
+  sous le nom), puis smurfs et anciens pseudos. Toutes les games de tous ces
+  comptes sont créditées à `name`.
+- `aliases` (optionnel) — anciens **noms** de la personne, si tu la renommes et
+  que ce nom n'était pas un pseudo de ses comptes.
+
+Changer un nom ou ajouter un compte → modifier `roster.json`, c'est tout :
+l'historique de `data.js` est réécrit au run suivant (un ancien pseudo de compte
+est reconnu tout seul). Après un changement, redéployer le worker
+(`npx wrangler deploy`) pour que le bouton ⟳ suive aussi.
+
+Une game compte si **5 personnes** du roster sont dans la même équipe (deux
+comptes de la même personne ne comptent qu'une fois).
 
 En interne, les comptes sont résolus vers leur **PUUID** Riot (identifiant stable
-qui ne change jamais, même après un rename) puis mis en cache dans `puuids.json`.
-Si un compte **connu** est renommé sans qu'on mette `ACCOUNTS` à jour, le script
-réutilise le puuid en cache et ne perd personne.
+qui ne change jamais, même après un rename) puis mis en cache dans `puuids.json`
+(conservé entre les runs du bot grâce au cache GitHub Actions). Si un compte connu
+est renommé, le script le retrouve quand même et affiche son nouveau pseudo pour
+qu'on mette `roster.json` à jour.
 
 ⚠️ `puuids.json` n'est **jamais commité** (il est dans `.gitignore`) : un PUUID
 est un identifiant de compte Riot, on ne le met pas dans un repo public. Pour la
 même raison, `data.js` ne contient **que des pseudos**, aucun identifiant Riot.
 
-Seul cas non automatisable : un compte **jamais vu** qui est en fait le rename de
-quelqu'un — là il faut ajouter la ligne `as:` à la main.
+Des games manquent ? `node fetch_games.js RGAPI-xxx --diag` liste les comptes
+inconnus qui complètent vos games à 4 : souvent un smurf à ajouter dans `accounts`.
 
 ## Réglages (en haut de `fetch_games.js`)
 
 - `MIN_ROSTER` — nombre minimum de potes dans la même équipe (actuellement 5 = full stack)
-- `MATCHES_PER_PLAYER` — profondeur d'historique par joueur
-- `MAX_GAMES` — plafond de games téléchargées
+- `SINCE` — date de début : tout l'historique flex depuis cette date est parcouru
+- `MAX_GAMES` — plafond de games téléchargées par run (le reste au run suivant)
 
 ## Mise à jour automatique (optionnel)
 

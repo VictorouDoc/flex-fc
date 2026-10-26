@@ -14,28 +14,9 @@
 //  Déploiement : npx wrangler deploy
 // ============================================================
 
-const ROSTER = [
-  { name: "Pyyrat",         tag: "ASAP"  },
-  { name: "Cedex",          tag: "0000"  },
-  { name: "Thanus",         tag: "SODO"  },
-  { name: "SeanII TK",      tag: "EUW"   },
-  { name: "CL Sky",         tag: "EUW"   },
-  { name: "ThanosDZ",       tag: "EUW"   },
-  { name: "DocLaFolle",     tag: "LeSaf" },
-  { name: "Miso",           tag: "RAT"   },
-  { name: "Ξnjin",          tag: "PEAK"  },
-  { name: "Lionel Messi",   tag: "safou" },
-  { name: "Tasky",          tag: "574"   },
-  { name: "Jordan Carter",  tag: "7741"  },
-  { name: "Kanye West",     tag: "JLOVE" },
-  { name: "LaDid",          tag: "LaDid" },
-  { name: "Wiraak",         tag: "EUW"   },
-  { name: "Phaeldque",      tag: "EUW", as: "Thanus" }, // smurf de Thanus
-
-  // renames / autres comptes de Kanye West -> tout crédité à "Kanye West"
-  { name: "HANG NETANYAHU",   tag: "pls",   as: "Kanye West" },
-  { name: "on some real shi", tag: "frmyN", as: "Kanye West" },
-];
+// roster partagé avec fetch_games.js : une entrée par personne, tous ses comptes
+import roster from "./roster.json";
+const ACCOUNTS = roster.people.flatMap((p) => p.accounts.map((riotId) => ({ riotId, person: p.name })));
 const MIN_ROSTER = 5;
 const COOLDOWN_MS = 2 * 60 * 1000;
 const ROLE_ORDER = ["TOP", "JUNGLE", "MIDDLE", "BOTTOM", "UTILITY"];
@@ -63,16 +44,22 @@ async function riot(path, env) {
   return res.json();
 }
 
-// puuids du roster, résolus une fois puis gardés en KV
+// puuids du roster ("Pseudo#TAG" -> puuid), gardés en KV. On ne résout que
+// les comptes pas encore connus, et on ne jette jamais un puuid déjà trouvé :
+// un compte renommé reste suivi. Le nom affiché vient toujours de roster.json.
 async function getPuuids(env) {
-  let map = await env.COMMENTS.get("puuids_v4", "json");
-  if (map && Object.keys(map).length >= ROSTER.length) return map;
-  map = {};
-  for (const p of ROSTER) {
-    const acc = await riot(`/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(p.name)}/${encodeURIComponent(p.tag)}`, env);
-    if (acc) map[acc.puuid] = p.as || p.name; // smurfs/renames crédités à leur propriétaire
+  const cache = (await env.COMMENTS.get("puuids_v5", "json")) || {};
+  const missing = ACCOUNTS.filter((a) => !cache[a.riotId]);
+  if (missing.length) {
+    for (const { riotId } of missing) {
+      const i = riotId.lastIndexOf("#");
+      const acc = await riot(`/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(riotId.slice(0, i))}/${encodeURIComponent(riotId.slice(i + 1))}`, env);
+      if (acc) cache[riotId] = acc.puuid;
+    }
+    await env.COMMENTS.put("puuids_v5", JSON.stringify(cache));
   }
-  await env.COMMENTS.put("puuids_v4", JSON.stringify(map));
+  const map = {};
+  ACCOUNTS.forEach(({ riotId, person }) => { if (cache[riotId]) map[cache[riotId]] = person; });
   return map;
 }
 
@@ -83,7 +70,7 @@ function buildGame(id, m, puuids) {
     if (name) byTeam[pt.teamId].push({ pt, name });
   });
   const team = byTeam[100].length >= byTeam[200].length ? byTeam[100] : byTeam[200];
-  if (team.length < MIN_ROSTER) return null;
+  if (new Set(team.map((x) => x.name)).size < MIN_ROSTER) return null;
   const teamId = team[0].pt.teamId;
   const mates = m.info.participants.filter((p) => p.teamId === teamId);
   const sec = m.info.gameDuration;
@@ -127,15 +114,15 @@ async function handleUpdate(req, env) {
 
   // matchlists récentes de tout le roster
   const count = {};
-  for (const puuid of Object.keys(puuids)) {
+  for (const [puuid, person] of Object.entries(puuids)) {
     const ids = (await riot(`/lol/match/v5/matches/by-puuid/${puuid}/ids?queue=440&count=10`, env)) || [];
-    ids.forEach((id) => { count[id] = (count[id] || 0) + 1; });
+    ids.forEach((id) => { (count[id] = count[id] || new Set()).add(person); });
   }
 
   const stored = (await env.COMMENTS.get("live_games", "json")) || [];
   const storedIds = new Set(stored.map((g) => g.id));
   const todo = Object.entries(count)
-    .filter(([id, n]) => n >= MIN_ROSTER && !known.has(id) && !storedIds.has(id))
+    .filter(([id, people]) => people.size >= MIN_ROSTER && !known.has(id) && !storedIds.has(id))
     .map(([id]) => id)
     .slice(0, 10); // garde une marge sous la limite de sous-requêtes
 

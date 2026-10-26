@@ -18,6 +18,15 @@ jobs:
         with:
           node-version: 22
 
+      # puuids.json n'est jamais commité : on le garde d'un run à l'autre
+      # via le cache Actions, sinon un compte renommé est perdu par le bot
+      - name: Cache des PUUID
+        uses: actions/cache@v4
+        with:
+          path: puuids.json
+          key: puuids-${{ github.run_id }}
+          restore-keys: puuids-
+
       - name: Récupérer les games
         env:
           RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}

@@ -1,0 +1,19 @@
+{
+  "people": [
+    { "name": "Pyyrat",        "accounts": ["Pyyrat#ASAP"] },
+    { "name": "Cedex",         "accounts": ["Cedex#0000"] },
+    { "name": "Thanus",        "accounts": ["Thanus#SODO", "Phaeldque#EUW"] },
+    { "name": "SeanII TK",     "accounts": ["SeanII TK#EUW"] },
+    { "name": "CL Sky",        "accounts": ["CL Sky#EUW"] },
+    { "name": "ThanosDZ",      "accounts": ["ThanosDZ#EUW"] },
+    { "name": "DocLaFolle",    "accounts": ["DocLaFolle#LeSaf"] },
+    { "name": "Miso",          "accounts": ["Miso#RAT"] },
+    { "name": "Ξnjin",         "accounts": ["Ξnjin#PEAK"] },
+    { "name": "Lionel Messi",  "accounts": ["Lionel Messi#safou"] },
+    { "name": "Tasky",         "accounts": ["Tasky#574"] },
+    { "name": "Jordan Carter", "accounts": ["Jordan Carter#7741"] },
+    { "name": "Kanye West",    "accounts": ["on some real shi#frmyN"] },
+    { "name": "LaDid",         "accounts": ["LaDid#LaDid"] },
+    { "name": "Wiraak",        "accounts": ["Wiraak#EUW"] }
+  ]
+}

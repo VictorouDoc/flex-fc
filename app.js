@@ -39,6 +39,26 @@ const LORE = {
   "ThanosDZ": "Weeb certifié : Japon, osu!, waifus. Son APM sur osu explose son score en flex, et son taux de testo suit la courbe inverse.",
 };
 
+// LORE est indexé par nom de personne, mais on accepte aussi un pseudo de
+// n'importe lequel de ses comptes (pratique quand on renomme quelqu'un)
+const pseudoOf = (riotId) => riotId.slice(0, riotId.lastIndexOf("#"));
+const loreOf = (p) => p && (LORE[p.name] || (p.accounts || []).map((a) => LORE[pseudoOf(a)]).find(Boolean));
+
+// nom de la personne à partir d'un pseudo de compte : les games live du
+// worker peuvent dater d'avant un changement de roster.json
+function canonName(name) {
+  const p = STATE.players.find((x) => x.name === name || (x.accounts || []).some((a) => pseudoOf(a) === name));
+  return p ? p.name : name;
+}
+const canonGame = (g) => ({ ...g, players: g.players.map((p) => ({ ...p, name: canonName(p.name) })) });
+
+// pseudo affiché sous le nom : "Pseudo #TAG" si différent du nom, sinon juste le tag
+const idLabel = (p) => (p.pseudo && p.pseudo !== p.name ? `${p.pseudo} ` : "") + p.tag;
+
+// note moyenne "lissée" : avec peu de games on tire vers la moyenne du joueur,
+// sinon un champion joué 1 fois avec une game de feu passe devant tout le monde
+const smoothed = (sum, n, prior, k = 2) => (sum + prior * k) / (n + k);
+
 const QUIPS = [
   "A déjà flamé le jungler. Était le jungler.",
   "Ping '?' plus vite que son ombre.",
@@ -135,7 +155,7 @@ function recompute() {
     map[p.name] = {
       name: p.name, tag: p.tag, games: 0, wins: 0,
       kills: 0, deaths: 0, assists: 0, damage: 0, cs: 0, vision: 0,
-      champs: {}, mvps: 0, noobs: 0, scoreSum: 0,
+      champs: {}, champStats: {}, roles: {}, mvps: 0, noobs: 0, scoreSum: 0, kpSum: 0,
     };
   });
   STATE.games.forEach((g) => {
@@ -148,7 +168,16 @@ function recompute() {
       s.kills += p.kills; s.deaths += p.deaths; s.assists += p.assists;
       s.damage += p.damage; s.cs += p.cs; s.vision += p.vision;
       s.champs[p.champion] = (s.champs[p.champion] || 0) + 1;
-      s.scoreSum += perfScore(p, g);
+      const sc = perfScore(p, g);
+      s.scoreSum += sc;
+      s.kpSum += (p.kills + p.assists) / (g.teamKills || g.players.reduce((t, x) => t + x.kills, 0) || 1);
+      [[s.champStats, p.champion], [s.roles, p.role]].forEach(([bucket, key]) => {
+        const c = bucket[key] || (bucket[key] = { games: 0, wins: 0, kills: 0, deaths: 0, assists: 0, scoreSum: 0 });
+        c.games++;
+        if (g.victory) c.wins++;
+        c.kills += p.kills; c.deaths += p.deaths; c.assists += p.assists;
+        c.scoreSum += sc;
+      });
       if (p.name === mvp.name) s.mvps++;
       if (p.name === noob.name) s.noobs++;
     });
@@ -158,6 +187,13 @@ function recompute() {
     s.avgKda = s.deaths === 0 ? s.kills + s.assists : (s.kills + s.assists) / s.deaths;
     s.avgScore = s.games ? s.scoreSum / s.games : 0;
     s.mainChamp = Object.entries(s.champs).sort((a, b) => b[1] - a[1])[0];
+    // champions classés du meilleur au pire (note lissée), 2 games min pour le podium
+    s.champRank = Object.entries(s.champStats)
+      .map(([champ, c]) => ({ champ, ...c, avg: c.scoreSum / c.games, rank: smoothed(c.scoreSum, c.games, s.avgScore) }))
+      .sort((a, b) => b.rank - a.rank || b.games - a.games);
+    const pool = s.champRank.filter((c) => c.games >= 2);
+    s.bestChamp = pool[0];
+    s.worstChamp = pool.length > 1 ? pool[pool.length - 1] : undefined;
   });
   STATS = map;
   ACTIVE = Object.values(map).filter((s) => s.games > 0);
@@ -171,7 +207,7 @@ function recompute() {
 // fusionne deux listes de games sans doublon (par id), triées par date
 function mergeGames(base, extra) {
   const ids = new Set(base.map((g) => g.id));
-  const merged = [...base, ...extra.filter((g) => !ids.has(g.id))];
+  const merged = [...base, ...extra.filter((g) => !ids.has(g.id)).map(canonGame)];
   merged.sort((a, b) => a.date.localeCompare(b.date) || String(a.id).localeCompare(String(b.id)));
   return merged;
 }
@@ -388,18 +424,19 @@ function renderProfiles() {
   const el = $("#page-profiles");
   const cards = STATE.players.map((p, i) => {
     const s = STATS[p.name];
-    const quip = LORE[p.name] || QUIPS[i % QUIPS.length];
+    const quip = loreOf(p) || QUIPS[i % QUIPS.length];
     const mini = s.games
       ? `<div class="mini-stats">
           <div class="mini-stat"><b>${s.games}</b><span>games</span></div>
           <div class="mini-stat"><b>${s.winrate}%</b><span>winrate</span></div>
           <div class="mini-stat"><b>${s.avgKda.toFixed(1)}</b><span>kda</span></div>
-        </div>`
+        </div>
+        ${s.bestChamp ? `<div class="mini-best dim">⭐ ${esc(s.bestChamp.champ)} · ${Math.round((s.bestChamp.wins / s.bestChamp.games) * 100)}% WR</div>` : ""}`
       : `<div class="mini-stats"><div class="mini-stat"><b>—</b><span>jamais vu en game</span></div></div>`;
     return `
       <div class="profile-card" data-player="${p.name}">
         <h3>${p.name}</h3>
-        <div class="tag">${p.tag}</div>
+        <div class="tag">${esc(idLabel(p))}</div>
         <div class="quip">« ${quip} »</div>
         ${mini}
       </div>`;
@@ -415,7 +452,8 @@ function renderProfileDetail(name) {
   const el = $("#page-profiles");
   const s = STATS[name];
   const idx = STATE.players.findIndex((p) => p.name === name);
-  const quip = LORE[name] || QUIPS[idx % QUIPS.length];
+  const player = STATE.players[idx];
+  const quip = loreOf(player) || QUIPS[(idx < 0 ? 0 : idx) % QUIPS.length];
 
   const games = STATE.games.filter((g) => g.players.some((p) => p.name === name)).reverse();
 
@@ -451,23 +489,46 @@ function renderProfileDetail(name) {
       </div>`;
   }
 
-  // winrate par champion
-  const champStats = {};
-  games.forEach((g) => {
-    const p = g.players.find((x) => x.name === name);
-    champStats[p.champion] = champStats[p.champion] || { games: 0, wins: 0 };
-    champStats[p.champion].games++;
-    if (g.victory) champStats[p.champion].wins++;
-  });
-  const champRows = Object.entries(champStats)
-    .sort((a, b) => b[1].games - a[1].games)
-    .slice(0, 5)
-    .map(([c, v]) => `
+  // ses champions, du meilleur au pire (note lissée)
+  const champRows = (s.champRank || []).slice(0, 10).map((c, i) => `
       <tr>
-        <td>${c}</td>
-        <td class="mono">${v.games}</td>
-        <td class="mono">${v.wins}W - ${v.games - v.wins}L</td>
-        <td class="mono">${Math.round((v.wins / v.games) * 100)}%</td>
+        <td class="dim mono">${i === 0 && c.games >= 2 ? "⭐" : i + 1}</td>
+        <td>${esc(c.champ)}</td>
+        <td class="mono">${c.games}</td>
+        <td class="mono">${c.wins}W - ${c.games - c.wins}L</td>
+        <td class="mono">${Math.round((c.wins / c.games) * 100)}%</td>
+        <td class="mono">${(c.deaths === 0 ? c.kills + c.assists : (c.kills + c.assists) / c.deaths).toFixed(2)}</td>
+        <td class="mono">${c.avg.toFixed(1)}</td>
+      </tr>`).join("");
+
+  // ses rôles
+  const ROLE_NAMES = { TOP: "🗡️ Top", JGL: "🌲 Jungle", MID: "✨ Mid", ADC: "🏹 ADC", SUP: "🛡️ Support", "?": "❓ Inconnu" };
+  const roleRows = Object.entries(s.roles || {})
+    .sort((a, b) => b[1].games - a[1].games)
+    .map(([r, c]) => `
+      <tr>
+        <td>${ROLE_NAMES[r] || r}</td>
+        <td class="mono">${c.games}</td>
+        <td class="mono">${Math.round((c.wins / c.games) * 100)}%</td>
+        <td class="mono">${(c.scoreSum / c.games).toFixed(1)}</td>
+      </tr>`).join("");
+
+  // avec qui il gagne (ou pas)
+  const mates = {};
+  games.forEach((g) => g.players.forEach((x) => {
+    if (x.name === name) return;
+    const m = mates[x.name] || (mates[x.name] = { games: 0, wins: 0 });
+    m.games++;
+    if (g.victory) m.wins++;
+  }));
+  const mateRows = Object.entries(mates)
+    .sort((a, b) => (b[1].wins / b[1].games) - (a[1].wins / a[1].games) || b[1].games - a[1].games)
+    .map(([n, m]) => `
+      <tr>
+        <td class="player-cell" data-player="${esc(n)}">${esc(n)}</td>
+        <td class="mono">${m.games}</td>
+        <td class="mono">${m.wins}W - ${m.games - m.wins}L</td>
+        <td class="mono">${Math.round((m.wins / m.games) * 100)}%</td>
       </tr>`).join("");
 
   const rows = games.map((g) => {
@@ -493,29 +554,58 @@ function renderProfileDetail(name) {
       <div class="stat-box"><b>${s.avgKda.toFixed(2)}</b><span>KDA moyen</span></div>
       <div class="stat-box"><b>${s.mvps}</b><span>Titres de MVP</span></div>
       <div class="stat-box"><b>${s.noobs}</b><span>Titres de boulet</span></div>
-      <div class="stat-box"><b>${s.mainChamp ? s.mainChamp[0] : "—"}</b><span>Champion fétiche</span></div>
+      <div class="stat-box"><b>${s.mainChamp ? esc(s.mainChamp[0]) : "—"}</b><span>Champion fétiche</span></div>
+      <div class="stat-box"><b>${s.bestChamp ? esc(s.bestChamp.champ) : "—"}</b><span>Meilleur champion</span></div>
+      <div class="stat-box"><b>${s.worstChamp ? esc(s.worstChamp.champ) : "—"}</b><span>Champion à bannir</span></div>
       <div class="stat-box"><b>${(s.kills / s.games).toFixed(1)}</b><span>Kills / game</span></div>
       <div class="stat-box"><b>${(s.deaths / s.games).toFixed(1)}</b><span>Morts / game</span></div>
       <div class="stat-box"><b>${s.avgScore.toFixed(1)}</b><span>Note moyenne /10</span></div>
+      <div class="stat-box"><b>${fmt(Math.round(s.damage / s.games))}</b><span>Dégâts / game</span></div>
+      <div class="stat-box"><b>${Math.round(s.cs / s.games)}</b><span>CS / game</span></div>
+      <div class="stat-box"><b>${(s.vision / s.games).toFixed(1)}</b><span>Vision / game</span></div>
+      <div class="stat-box"><b>${Math.round((s.kpSum / s.games) * 100)}%</b><span>Kill participation</span></div>
+      <div class="stat-box"><b>${Object.keys(s.champs).length}</b><span>Champions joués</span></div>
     </div>` : `<p class="page-sub" style="margin-top:16px">Aucune game enregistrée. Soit il dodge, soit il dort.</p>`;
 
   el.innerHTML = `
     <div class="profile-detail">
       <button class="back-btn" id="back-to-roster">← Retour au roster</button>
       <div class="profile-hero">
-        <h2>${name} <span class="dim" style="font-size:0.9rem">${s.tag}</span></h2>
+        <h2>${esc(name)} <span class="dim" style="font-size:0.9rem">${esc(player ? idLabel(player) : s.tag)}</span></h2>
+        ${player && (player.accounts || []).length > 1 ? `<p class="dim accounts">Comptes : ${player.accounts.map(esc).join(" · ")}</p>` : ""}
         <p class="quip">« ${quip} »</p>
         ${statBoxes}
       </div>
       ${formBlock}
       ${s.games ? `
       <div class="stats-section" style="margin-top:24px">
-        <h3>Ses champions</h3>
+        <h3>Ses meilleurs champions</h3>
+        <p class="page-sub">Classés par note moyenne (lissée : un champion joué une seule fois ne passe pas devant tout le monde).</p>
         <div class="table-card">
           <table>
-            <thead><tr><th>Champion</th><th>Games</th><th>Bilan</th><th>Winrate</th></tr></thead>
+            <thead><tr><th>#</th><th>Champion</th><th>Games</th><th>Bilan</th><th>Winrate</th><th>KDA</th><th>Note</th></tr></thead>
             <tbody>${champRows}</tbody>
           </table>
+        </div>
+      </div>
+      <div class="role-boards">
+        <div class="stats-section">
+          <h3>Ses rôles</h3>
+          <div class="table-card">
+            <table>
+              <thead><tr><th>Rôle</th><th>Games</th><th>Winrate</th><th>Note</th></tr></thead>
+              <tbody>${roleRows}</tbody>
+            </table>
+          </div>
+        </div>
+        <div class="stats-section">
+          <h3>Ses coéquipiers</h3>
+          <div class="table-card">
+            <table>
+              <thead><tr><th>Avec</th><th>Games</th><th>Bilan</th><th>Winrate</th></tr></thead>
+              <tbody>${mateRows}</tbody>
+            </table>
+          </div>
         </div>
       </div>
       <div class="stats-section">
@@ -803,6 +893,59 @@ function renderStats() {
   STATE.games.forEach((g) => g.players.forEach((p) => { champCount[p.champion] = (champCount[p.champion] || 0) + 1; }));
   const topChamps = Object.entries(champCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
+  // meilleurs champions de la squad : note moyenne lissée, 3 picks min,
+  // avec le joueur qui le joue le mieux
+  const squadAvg = ACTIVE.reduce((t, x) => t + x.scoreSum, 0) / Math.max(ACTIVE.reduce((t, x) => t + x.games, 0), 1);
+  const champAgg = {};
+  STATE.games.forEach((g) => g.players.forEach((p) => {
+    const c = champAgg[p.champion] || (champAgg[p.champion] = { champ: p.champion, games: 0, wins: 0, kills: 0, deaths: 0, assists: 0, scoreSum: 0, by: {} });
+    const sc = perfScore(p, g);
+    c.games++;
+    if (g.victory) c.wins++;
+    c.kills += p.kills; c.deaths += p.deaths; c.assists += p.assists;
+    c.scoreSum += sc;
+    const b = c.by[p.name] || (c.by[p.name] = { games: 0, scoreSum: 0 });
+    b.games++;
+    b.scoreSum += sc;
+  }));
+  const champList = Object.values(champAgg)
+    .filter((c) => c.games >= 3)
+    .map((c) => {
+      const best = Object.entries(c.by).sort((a, b) => smoothed(b[1].scoreSum, b[1].games, squadAvg) - smoothed(a[1].scoreSum, a[1].games, squadAvg))[0];
+      return { ...c, avg: c.scoreSum / c.games, rank: smoothed(c.scoreSum, c.games, squadAvg), best: best[0], bestGames: best[1].games };
+    })
+    .sort((a, b) => b.rank - a.rank || b.games - a.games);
+  const champRow = (c, i) => `
+      <tr>
+        <td class="dim mono">${i + 1}</td>
+        <td>${esc(c.champ)}</td>
+        <td class="mono">${c.games}</td>
+        <td class="mono">${c.wins}W - ${c.games - c.wins}L</td>
+        <td class="mono">${Math.round((c.wins / c.games) * 100)}%</td>
+        <td class="mono">${(c.deaths === 0 ? c.kills + c.assists : (c.kills + c.assists) / c.deaths).toFixed(2)}</td>
+        <td class="mono">${c.avg.toFixed(1)}</td>
+        <td class="player-cell" data-player="${esc(c.best)}">${esc(c.best)} <span class="dim">(${c.bestGames})</span></td>
+      </tr>`;
+  const bestChampRows = champList.slice(0, 10).map(champRow).join("");
+  const cursedChamps = [...champList]
+    .sort((a, b) => (a.wins / a.games) - (b.wins / b.games) || b.games - a.games)
+    .slice(0, 5);
+
+  // records sur une seule game
+  const allPerfs = STATE.games.flatMap((g) => g.players.map((p) => ({ p, g })));
+  const recordOf = (fn) => allPerfs.reduce((best, x) => (!best || fn(x.p) > fn(best.p) ? x : best), null);
+  const RECORDS = [
+    { emoji: "🔪", label: "Plus de kills", fn: (p) => p.kills, fmtv: (p) => `${p.kills} kills` },
+    { emoji: "⚰️", label: "Plus de morts", fn: (p) => p.deaths, fmtv: (p) => `${p.deaths} morts` },
+    { emoji: "🤝", label: "Plus d'assists", fn: (p) => p.assists, fmtv: (p) => `${p.assists} assists` },
+    { emoji: "💥", label: "Plus de dégâts", fn: (p) => p.damage, fmtv: (p) => fmt(p.damage) },
+    { emoji: "🌾", label: "Plus de CS", fn: (p) => p.cs, fmtv: (p) => `${p.cs} CS` },
+    { emoji: "👁️", label: "Meilleure vision", fn: (p) => p.vision, fmtv: (p) => `${p.vision} de vision` },
+  ].map((r) => ({ ...r, rec: recordOf(r.fn) }));
+  const byDuration = [...STATE.games].sort((a, b) => toMin(b.duration) - toMin(a.duration));
+  const longest = byDuration[0];
+  const shortest = byDuration[byDuration.length - 1];
+
   const lineups = {};
   STATE.games.forEach((g) => {
     const key = g.players.map((p) => p.name).sort().join(" · ");
@@ -935,6 +1078,37 @@ function renderStats() {
           <thead><tr><th>Composition</th><th>Bilan</th><th>Winrate</th></tr></thead>
           <tbody>${lineupRows}</tbody>
         </table>
+      </div>
+    </div>
+
+    ${champList.length ? `
+    <div class="stats-section">
+      <h3>Les meilleurs champions de la squad</h3>
+      <p class="page-sub">3 picks minimum, classés par note moyenne. La dernière colonne : qui le joue le mieux.</p>
+      <div class="table-card">
+        <table>
+          <thead><tr><th>#</th><th>Champion</th><th>Picks</th><th>Bilan</th><th>Winrate</th><th>KDA</th><th>Note</th><th>Le patron</th></tr></thead>
+          <tbody>${bestChampRows}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="stats-section">
+      <h3>Les champions maudits</h3>
+      <p class="page-sub">Les pires winrates (3 picks min). Ban-les. Pour notre bien à tous.</p>
+      <div class="big-stats">
+        ${cursedChamps.map((c) => `
+          <div class="big-stat"><div class="value" style="font-size:1.1rem">${esc(c.champ)}</div><div class="label">${Math.round((c.wins / c.games) * 100)}% WR</div><div class="sub">${c.wins}W - ${c.games - c.wins}L · surtout ${esc(c.best)}</div></div>`).join("")}
+      </div>
+    </div>` : ""}
+
+    <div class="stats-section">
+      <h3>Les records</h3>
+      <div class="big-stats">
+        ${RECORDS.filter((r) => r.rec).map(({ emoji, label, fmtv, rec }) => `
+          <div class="big-stat"><div class="value" style="font-size:1.1rem">${emoji} ${fmtv(rec.p)}</div><div class="label">${label}</div><div class="sub"><b class="player-cell" data-player="${esc(rec.p.name)}">${esc(rec.p.name)}</b> sur ${esc(rec.p.champion)} · ${new Date(rec.g.date).toLocaleDateString("fr-FR")}</div></div>`).join("")}
+        <div class="big-stat"><div class="value" style="font-size:1.1rem">🐢 ${longest.duration}</div><div class="label">Game la plus longue</div><div class="sub">${longest.victory ? "Gagnée" : "Perdue"} · ${new Date(longest.date).toLocaleDateString("fr-FR")}</div></div>
+        <div class="big-stat"><div class="value" style="font-size:1.1rem">⚡ ${shortest.duration}</div><div class="label">Game la plus courte</div><div class="sub">${shortest.victory ? "Stomp" : "FF"} · ${new Date(shortest.date).toLocaleDateString("fr-FR")}</div></div>
       </div>
     </div>
 

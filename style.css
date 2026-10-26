@@ -421,3 +421,7 @@ tr.row-noob td:first-child { box-shadow: inset 3px 0 0 var(--loss); }
   table { font-size: 0.75rem; }
   td, th { padding: 8px 8px; }
 }
+
+/* ---------- profils : meilleur champion, comptes ---------- */
+.mini-best { margin-top: 10px; font-size: 0.78rem; }
+.profile-hero .accounts { font-size: 0.8rem; margin: 4px 0 0; }

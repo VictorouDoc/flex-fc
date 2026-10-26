@@ -8,63 +8,124 @@
 const PLAYERS = [
   {
     "name": "Pyyrat",
-    "tag": "#ASAP"
+    "pseudo": "Pyyrat",
+    "tag": "#ASAP",
+    "accounts": [
+      "Pyyrat#ASAP"
+    ]
   },
   {
     "name": "Cedex",
-    "tag": "#0000"
+    "pseudo": "Cedex",
+    "tag": "#0000",
+    "accounts": [
+      "Cedex#0000"
+    ]
   },
   {
     "name": "Thanus",
-    "tag": "#SODO"
+    "pseudo": "Thanus",
+    "tag": "#SODO",
+    "accounts": [
+      "Thanus#SODO",
+      "Phaeldque#EUW"
+    ]
   },
   {
     "name": "SeanII TK",
-    "tag": "#EUW"
+    "pseudo": "SeanII TK",
+    "tag": "#EUW",
+    "accounts": [
+      "SeanII TK#EUW"
+    ]
   },
   {
     "name": "CL Sky",
-    "tag": "#EUW"
+    "pseudo": "CL Sky",
+    "tag": "#EUW",
+    "accounts": [
+      "CL Sky#EUW"
+    ]
   },
   {
     "name": "ThanosDZ",
-    "tag": "#EUW"
+    "pseudo": "ThanosDZ",
+    "tag": "#EUW",
+    "accounts": [
+      "ThanosDZ#EUW"
+    ]
   },
   {
     "name": "DocLaFolle",
-    "tag": "#LeSaf"
+    "pseudo": "DocLaFolle",
+    "tag": "#LeSaf",
+    "accounts": [
+      "DocLaFolle#LeSaf"
+    ]
   },
   {
     "name": "Miso",
-    "tag": "#RAT"
+    "pseudo": "Miso",
+    "tag": "#RAT",
+    "accounts": [
+      "Miso#RAT"
+    ]
   },
   {
     "name": "Ξnjin",
-    "tag": "#PEAK"
+    "pseudo": "Ξnjin",
+    "tag": "#PEAK",
+    "accounts": [
+      "Ξnjin#PEAK"
+    ]
   },
   {
     "name": "Lionel Messi",
-    "tag": "#safou"
+    "pseudo": "Lionel Messi",
+    "tag": "#safou",
+    "accounts": [
+      "Lionel Messi#safou"
+    ]
   },
   {
     "name": "Tasky",
-    "tag": "#574"
+    "pseudo": "Tasky",
+    "tag": "#574",
+    "accounts": [
+      "Tasky#574"
+    ]
   },
   {
     "name": "Jordan Carter",
-    "tag": "#7741"
+    "pseudo": "Jordan Carter",
+    "tag": "#7741",
+    "accounts": [
+      "Jordan Carter#7741"
+    ]
   },
   {
     "name": "Kanye West",
-    "tag": "#JLOVE"
+    "pseudo": "on some real shi",
+    "tag": "#frmyN",
+    "accounts": [
+      "on some real shi#frmyN"
+    ]
   },
   {
     "name": "LaDid",
-    "tag": "#LaDid"
+    "pseudo": "LaDid",
+    "tag": "#LaDid",
+    "accounts": [
+      "LaDid#LaDid"
+    ]
   },
   {
     "name": "Wiraak",
-    "tag": "#EUW"
+    "pseudo": "Wiraak",
+    "tag": "#EUW",
+    "accounts": [
+      "Wiraak#EUW"
+    ]
   }
 ];
 
