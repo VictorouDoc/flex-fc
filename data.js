@@ -49,10 +49,10 @@ const PLAYERS = [
   },
   {
     "name": "ThanosDZ",
-    "pseudo": "ThanosDZ",
-    "tag": "#EUW",
+    "pseudo": "Viegoy",
+    "tag": "#JEW",
     "accounts": [
-      "ThanosDZ#EUW"
+      "Viegoy#JEW"
     ]
   },
   {
