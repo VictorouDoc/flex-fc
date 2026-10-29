@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 28/10/2026 10:05:29
-//  179 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 29/10/2026 10:29:44
+//  180 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -11762,6 +11762,71 @@ const GAMES = [
         "cs": 23,
         "damage": 11474,
         "vision": 38
+      }
+    ]
+  },
+  {
+    "id": "EUW1_8028630998",
+    "date": "2026-10-28",
+    "victory": true,
+    "duration": "26:06",
+    "teamKills": 41,
+    "teamDamage": 96004,
+    "players": [
+      {
+        "name": "ThanosDZ",
+        "role": "TOP",
+        "champion": "Malphite",
+        "kills": 9,
+        "deaths": 4,
+        "assists": 6,
+        "cs": 177,
+        "damage": 19620,
+        "vision": 21
+      },
+      {
+        "name": "Cedex",
+        "role": "JGL",
+        "champion": "Shyvana",
+        "kills": 11,
+        "deaths": 2,
+        "assists": 9,
+        "cs": 199,
+        "damage": 22369,
+        "vision": 24
+      },
+      {
+        "name": "Wiraak",
+        "role": "MID",
+        "champion": "Xerath",
+        "kills": 8,
+        "deaths": 3,
+        "assists": 5,
+        "cs": 172,
+        "damage": 21028,
+        "vision": 13
+      },
+      {
+        "name": "Miso",
+        "role": "ADC",
+        "champion": "Kaisa",
+        "kills": 12,
+        "deaths": 5,
+        "assists": 5,
+        "cs": 204,
+        "damage": 25922,
+        "vision": 15
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "SUP",
+        "champion": "Karma",
+        "kills": 1,
+        "deaths": 5,
+        "assists": 20,
+        "cs": 31,
+        "damage": 7065,
+        "vision": 70
       }
     ]
   }
