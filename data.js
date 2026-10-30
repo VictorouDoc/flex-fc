@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 29/10/2026 10:29:44
-//  180 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 30/10/2026 10:30:36
+//  183 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -11827,6 +11827,201 @@ const GAMES = [
         "cs": 31,
         "damage": 7065,
         "vision": 70
+      }
+    ]
+  },
+  {
+    "id": "EUW1_8029884835",
+    "date": "2026-10-29",
+    "victory": true,
+    "duration": "31:56",
+    "teamKills": 37,
+    "teamDamage": 134489,
+    "players": [
+      {
+        "name": "Lionel Messi",
+        "role": "TOP",
+        "champion": "Ambessa",
+        "kills": 4,
+        "deaths": 10,
+        "assists": 8,
+        "cs": 228,
+        "damage": 29311,
+        "vision": 32
+      },
+      {
+        "name": "Kanye West",
+        "role": "JGL",
+        "champion": "Locke",
+        "kills": 20,
+        "deaths": 4,
+        "assists": 10,
+        "cs": 207,
+        "damage": 44026,
+        "vision": 25
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "MID",
+        "champion": "Galio",
+        "kills": 6,
+        "deaths": 4,
+        "assists": 15,
+        "cs": 219,
+        "damage": 22659,
+        "vision": 23
+      },
+      {
+        "name": "Cedex",
+        "role": "ADC",
+        "champion": "Tristana",
+        "kills": 5,
+        "deaths": 7,
+        "assists": 12,
+        "cs": 251,
+        "damage": 23364,
+        "vision": 31
+      },
+      {
+        "name": "Miso",
+        "role": "SUP",
+        "champion": "Nautilus",
+        "kills": 2,
+        "deaths": 9,
+        "assists": 25,
+        "cs": 34,
+        "damage": 15129,
+        "vision": 107
+      }
+    ]
+  },
+  {
+    "id": "EUW1_8029920536",
+    "date": "2026-10-30",
+    "victory": false,
+    "duration": "33:31",
+    "teamKills": 42,
+    "teamDamage": 143736,
+    "players": [
+      {
+        "name": "Miso",
+        "role": "TOP",
+        "champion": "Akali",
+        "kills": 14,
+        "deaths": 9,
+        "assists": 5,
+        "cs": 190,
+        "damage": 41093,
+        "vision": 31
+      },
+      {
+        "name": "Lionel Messi",
+        "role": "JGL",
+        "champion": "LeeSin",
+        "kills": 8,
+        "deaths": 11,
+        "assists": 16,
+        "cs": 143,
+        "damage": 25558,
+        "vision": 35
+      },
+      {
+        "name": "Kanye West",
+        "role": "MID",
+        "champion": "Hwei",
+        "kills": 4,
+        "deaths": 7,
+        "assists": 17,
+        "cs": 244,
+        "damage": 32424,
+        "vision": 23
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "ADC",
+        "champion": "Aphelios",
+        "kills": 13,
+        "deaths": 9,
+        "assists": 7,
+        "cs": 229,
+        "damage": 30888,
+        "vision": 27
+      },
+      {
+        "name": "Cedex",
+        "role": "SUP",
+        "champion": "Zilean",
+        "kills": 3,
+        "deaths": 7,
+        "assists": 21,
+        "cs": 50,
+        "damage": 13773,
+        "vision": 55
+      }
+    ]
+  },
+  {
+    "id": "EUW1_8029945524",
+    "date": "2026-10-30",
+    "victory": true,
+    "duration": "32:32",
+    "teamKills": 46,
+    "teamDamage": 176654,
+    "players": [
+      {
+        "name": "Miso",
+        "role": "TOP",
+        "champion": "Nasus",
+        "kills": 3,
+        "deaths": 8,
+        "assists": 5,
+        "cs": 298,
+        "damage": 25320,
+        "vision": 8
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "JGL",
+        "champion": "Graves",
+        "kills": 23,
+        "deaths": 5,
+        "assists": 5,
+        "cs": 249,
+        "damage": 39192,
+        "vision": 32
+      },
+      {
+        "name": "Kanye West",
+        "role": "MID",
+        "champion": "Vladimir",
+        "kills": 8,
+        "deaths": 6,
+        "assists": 15,
+        "cs": 249,
+        "damage": 65633,
+        "vision": 23
+      },
+      {
+        "name": "Lionel Messi",
+        "role": "ADC",
+        "champion": "Kalista",
+        "kills": 9,
+        "deaths": 6,
+        "assists": 18,
+        "cs": 188,
+        "damage": 30716,
+        "vision": 24
+      },
+      {
+        "name": "Cedex",
+        "role": "SUP",
+        "champion": "Renata",
+        "kills": 3,
+        "deaths": 6,
+        "assists": 28,
+        "cs": 23,
+        "damage": 15793,
+        "vision": 86
       }
     ]
   }
