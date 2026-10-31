@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 30/10/2026 10:30:36
-//  183 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 31/10/2026 10:00:14
+//  186 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -12022,6 +12022,201 @@ const GAMES = [
         "cs": 23,
         "damage": 15793,
         "vision": 86
+      }
+    ]
+  },
+  {
+    "id": "EUW1_8030882805",
+    "date": "2026-10-30",
+    "victory": false,
+    "duration": "33:04",
+    "teamKills": 33,
+    "teamDamage": 151120,
+    "players": [
+      {
+        "name": "Jordan Carter",
+        "role": "TOP",
+        "champion": "Kayle",
+        "kills": 6,
+        "deaths": 7,
+        "assists": 9,
+        "cs": 296,
+        "damage": 37743,
+        "vision": 34
+      },
+      {
+        "name": "Cedex",
+        "role": "JGL",
+        "champion": "Shyvana",
+        "kills": 10,
+        "deaths": 9,
+        "assists": 12,
+        "cs": 192,
+        "damage": 35671,
+        "vision": 23
+      },
+      {
+        "name": "Miso",
+        "role": "MID",
+        "champion": "Veigar",
+        "kills": 10,
+        "deaths": 5,
+        "assists": 7,
+        "cs": 274,
+        "damage": 33570,
+        "vision": 23
+      },
+      {
+        "name": "Kanye West",
+        "role": "ADC",
+        "champion": "Lucian",
+        "kills": 7,
+        "deaths": 9,
+        "assists": 14,
+        "cs": 237,
+        "damage": 35420,
+        "vision": 33
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "SUP",
+        "champion": "Nami",
+        "kills": 0,
+        "deaths": 9,
+        "assists": 23,
+        "cs": 24,
+        "damage": 8716,
+        "vision": 76
+      }
+    ]
+  },
+  {
+    "id": "EUW1_8030921410",
+    "date": "2026-10-30",
+    "victory": false,
+    "duration": "29:50",
+    "teamKills": 28,
+    "teamDamage": 91834,
+    "players": [
+      {
+        "name": "Cedex",
+        "role": "TOP",
+        "champion": "Rumble",
+        "kills": 1,
+        "deaths": 11,
+        "assists": 3,
+        "cs": 178,
+        "damage": 13097,
+        "vision": 10
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "JGL",
+        "champion": "Ekko",
+        "kills": 10,
+        "deaths": 13,
+        "assists": 6,
+        "cs": 146,
+        "damage": 22605,
+        "vision": 22
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "MID",
+        "champion": "Lissandra",
+        "kills": 10,
+        "deaths": 8,
+        "assists": 6,
+        "cs": 222,
+        "damage": 26645,
+        "vision": 19
+      },
+      {
+        "name": "Kanye West",
+        "role": "ADC",
+        "champion": "Xayah",
+        "kills": 4,
+        "deaths": 9,
+        "assists": 6,
+        "cs": 233,
+        "damage": 16251,
+        "vision": 24
+      },
+      {
+        "name": "Miso",
+        "role": "SUP",
+        "champion": "Pantheon",
+        "kills": 3,
+        "deaths": 17,
+        "assists": 7,
+        "cs": 28,
+        "damage": 13236,
+        "vision": 65
+      }
+    ]
+  },
+  {
+    "id": "EUW1_8030981615",
+    "date": "2026-10-30",
+    "victory": true,
+    "duration": "32:42",
+    "teamKills": 52,
+    "teamDamage": 162622,
+    "players": [
+      {
+        "name": "Jordan Carter",
+        "role": "TOP",
+        "champion": "Ambessa",
+        "kills": 5,
+        "deaths": 9,
+        "assists": 9,
+        "cs": 208,
+        "damage": 22357,
+        "vision": 32
+      },
+      {
+        "name": "Miso",
+        "role": "JGL",
+        "champion": "Sylas",
+        "kills": 8,
+        "deaths": 3,
+        "assists": 16,
+        "cs": 220,
+        "damage": 28768,
+        "vision": 43
+      },
+      {
+        "name": "Kanye West",
+        "role": "MID",
+        "champion": "Zed",
+        "kills": 18,
+        "deaths": 6,
+        "assists": 9,
+        "cs": 204,
+        "damage": 52519,
+        "vision": 21
+      },
+      {
+        "name": "Cedex",
+        "role": "ADC",
+        "champion": "Tristana",
+        "kills": 15,
+        "deaths": 10,
+        "assists": 14,
+        "cs": 219,
+        "damage": 46712,
+        "vision": 31
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "SUP",
+        "champion": "Alistar",
+        "kills": 6,
+        "deaths": 10,
+        "assists": 24,
+        "cs": 36,
+        "damage": 12266,
+        "vision": 81
       }
     ]
   }
