@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 01/11/2026 10:51:26
-//  186 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 02/11/2026 11:45:09
+//  189 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -12217,6 +12217,201 @@ const GAMES = [
         "cs": 36,
         "damage": 12266,
         "vision": 81
+      }
+    ]
+  },
+  {
+    "id": "EUW1_8032530239",
+    "date": "2026-11-01",
+    "victory": false,
+    "duration": "16:26",
+    "teamKills": 11,
+    "teamDamage": 33231,
+    "players": [
+      {
+        "name": "Jordan Carter",
+        "role": "TOP",
+        "champion": "Teemo",
+        "kills": 4,
+        "deaths": 6,
+        "assists": 2,
+        "cs": 133,
+        "damage": 14429,
+        "vision": 10
+      },
+      {
+        "name": "Miso",
+        "role": "JGL",
+        "champion": "AurelionSol",
+        "kills": 4,
+        "deaths": 3,
+        "assists": 1,
+        "cs": 132,
+        "damage": 5554,
+        "vision": 13
+      },
+      {
+        "name": "Cedex",
+        "role": "MID",
+        "champion": "Ryze",
+        "kills": 0,
+        "deaths": 4,
+        "assists": 1,
+        "cs": 120,
+        "damage": 4164,
+        "vision": 7
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "ADC",
+        "champion": "Kaisa",
+        "kills": 3,
+        "deaths": 7,
+        "assists": 2,
+        "cs": 119,
+        "damage": 6113,
+        "vision": 6
+      },
+      {
+        "name": "Wiraak",
+        "role": "SUP",
+        "champion": "Blitzcrank",
+        "kills": 0,
+        "deaths": 5,
+        "assists": 3,
+        "cs": 14,
+        "damage": 2971,
+        "vision": 20
+      }
+    ]
+  },
+  {
+    "id": "EUW1_8032571042",
+    "date": "2026-11-01",
+    "victory": false,
+    "duration": "24:50",
+    "teamKills": 21,
+    "teamDamage": 60829,
+    "players": [
+      {
+        "name": "Jordan Carter",
+        "role": "TOP",
+        "champion": "Riven",
+        "kills": 1,
+        "deaths": 8,
+        "assists": 2,
+        "cs": 191,
+        "damage": 10015,
+        "vision": 20
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "JGL",
+        "champion": "Vi",
+        "kills": 5,
+        "deaths": 8,
+        "assists": 3,
+        "cs": 149,
+        "damage": 11606,
+        "vision": 16
+      },
+      {
+        "name": "Cedex",
+        "role": "MID",
+        "champion": "Bard",
+        "kills": 2,
+        "deaths": 8,
+        "assists": 6,
+        "cs": 139,
+        "damage": 9039,
+        "vision": 9
+      },
+      {
+        "name": "Miso",
+        "role": "ADC",
+        "champion": "Zeri",
+        "kills": 11,
+        "deaths": 10,
+        "assists": 1,
+        "cs": 210,
+        "damage": 24478,
+        "vision": 16
+      },
+      {
+        "name": "Wiraak",
+        "role": "SUP",
+        "champion": "Janna",
+        "kills": 2,
+        "deaths": 8,
+        "assists": 13,
+        "cs": 35,
+        "damage": 5691,
+        "vision": 43
+      }
+    ]
+  },
+  {
+    "id": "EUW1_8032608270",
+    "date": "2026-11-01",
+    "victory": false,
+    "duration": "32:55",
+    "teamKills": 47,
+    "teamDamage": 128595,
+    "players": [
+      {
+        "name": "Cedex",
+        "role": "TOP",
+        "champion": "Jax",
+        "kills": 16,
+        "deaths": 7,
+        "assists": 5,
+        "cs": 255,
+        "damage": 34363,
+        "vision": 24
+      },
+      {
+        "name": "ThanosDZ",
+        "role": "JGL",
+        "champion": "Hecarim",
+        "kills": 8,
+        "deaths": 5,
+        "assists": 13,
+        "cs": 267,
+        "damage": 20608,
+        "vision": 16
+      },
+      {
+        "name": "Miso",
+        "role": "MID",
+        "champion": "Nunu",
+        "kills": 11,
+        "deaths": 10,
+        "assists": 13,
+        "cs": 115,
+        "damage": 25585,
+        "vision": 21
+      },
+      {
+        "name": "Wiraak",
+        "role": "ADC",
+        "champion": "Varus",
+        "kills": 5,
+        "deaths": 8,
+        "assists": 7,
+        "cs": 235,
+        "damage": 20673,
+        "vision": 20
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "SUP",
+        "champion": "Velkoz",
+        "kills": 7,
+        "deaths": 8,
+        "assists": 11,
+        "cs": 68,
+        "damage": 27366,
+        "vision": 107
       }
     ]
   }
