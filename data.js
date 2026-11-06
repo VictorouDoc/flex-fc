@@ -1,7 +1,7 @@
 // ============================================================
 //  DATA.JS — généré automatiquement par fetch_games.js
-//  le 05/11/2026 11:41:14
-//  189 games de Flex (queue 440), min 5 joueurs du roster.
+//  le 06/11/2026 11:39:39
+//  190 games de Flex (queue 440), min 5 joueurs du roster.
 //  Pour mettre à jour : node fetch_games.js RGAPI-xxxx
 // ============================================================
 
@@ -12412,6 +12412,71 @@ const GAMES = [
         "cs": 68,
         "damage": 27366,
         "vision": 107
+      }
+    ]
+  },
+  {
+    "id": "EUW1_8036927983",
+    "date": "2026-11-05",
+    "victory": false,
+    "duration": "37:47",
+    "teamKills": 55,
+    "teamDamage": 198587,
+    "players": [
+      {
+        "name": "Kanye West",
+        "role": "TOP",
+        "champion": "Ambessa",
+        "kills": 19,
+        "deaths": 5,
+        "assists": 17,
+        "cs": 263,
+        "damage": 76550,
+        "vision": 38
+      },
+      {
+        "name": "Cedex",
+        "role": "JGL",
+        "champion": "Nocturne",
+        "kills": 12,
+        "deaths": 10,
+        "assists": 22,
+        "cs": 190,
+        "damage": 27976,
+        "vision": 28
+      },
+      {
+        "name": "Wiraak",
+        "role": "MID",
+        "champion": "Azir",
+        "kills": 7,
+        "deaths": 10,
+        "assists": 16,
+        "cs": 224,
+        "damage": 32450,
+        "vision": 16
+      },
+      {
+        "name": "Miso",
+        "role": "ADC",
+        "champion": "Morgana",
+        "kills": 7,
+        "deaths": 13,
+        "assists": 18,
+        "cs": 196,
+        "damage": 29500,
+        "vision": 34
+      },
+      {
+        "name": "Jordan Carter",
+        "role": "SUP",
+        "champion": "Zoe",
+        "kills": 10,
+        "deaths": 13,
+        "assists": 24,
+        "cs": 49,
+        "damage": 32111,
+        "vision": 140
       }
     ]
   }
